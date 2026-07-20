@@ -6,3 +6,5 @@
 .public-cta { background: var(--aac-charcoal); border-radius: calc(var(--aac-radius) * 1.25); color: var(--aac-white); }
 .public-footer { background: var(--aac-charcoal); color: var(--aac-footer-text); }
 .public-footer a { color: var(--aac-footer-link); }
+.auth-section { min-height: 70vh; display: grid; place-items: center; padding: 3rem 0; }
+.auth-card { width: min(100%, 30rem); border: 1px solid var(--aac-border); border-radius: var(--aac-radius); box-shadow: var(--aac-shadow); }

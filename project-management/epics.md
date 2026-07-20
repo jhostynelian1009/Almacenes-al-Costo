@@ -1,5 +1,31 @@
 # Épicas del Proyecto — Almacenes al Costo
 
+> **Vigencia:** El catálogo histórico de 10 épicas conservado más abajo queda reemplazado, para planificación y ejecución, por las 15 épicas de esta sección. Se mantiene como trazabilidad y no debe usarse para crear Issues nuevos.
+
+## Modelo vigente de 15 épicas
+
+| Orden | Épica | Dependencias bloqueantes | Integraciones no bloqueantes | Entregable principal |
+| ---: | --- | --- | --- | --- |
+| 1 | EP-001 Infraestructura y Configuración | Ninguna | — | Entorno, Bootstrap/Vite, layouts, componentes y pruebas base; sin autenticación |
+| 2 | EP-002 Autenticación y Seguridad | EP-001 | EP-014 amplía administración | Login/logout, recuperación, sesiones, roles iniciales y panel protegido |
+| 3 | EP-007 Gestión de Categorías | EP-001, EP-002 | EP-003 consume categorías | CRUD de categorías |
+| 4 | EP-006 Gestión de Productos | EP-001, EP-002, EP-007 | EP-008 integra stock | CRUD de información comercial |
+| 5 | EP-008 Gestión de Inventario | EP-002, EP-006 | EP-004 consume disponibilidad | Existencias, movimientos, reservas y disponibilidad |
+| 6 | EP-003 Sitio Público | EP-001 para iniciar; EP-007, EP-006 y EP-008 para cerrar | EP-011 | Inicio, navegación y catálogo dinámico |
+| 7 | EP-004 Carrito y Checkout | EP-003, EP-006, EP-008 | EP-002 para cuenta opcional | Carrito, checkout invitado y orden inicial |
+| 8 | EP-005 Sistema de Pagos Manuales | EP-002, EP-004 | Pasarela futura | Transferencia/Deuna, comprobante, revisión y auditoría |
+| 9 | EP-009 Gestión de Pedidos | EP-002, EP-004, EP-005 | EP-010 | Operación avanzada de órdenes |
+| 10 | EP-010 Gestión de Clientes | EP-004 | Cuenta opcional | Gestión de Clientes |
+| 11 | EP-011 Gestión de Promociones | EP-006 | EP-003/EP-004 | Promociones |
+| 12 | EP-012 Dashboard y Analítica | EP-009 | EP-014 | Indicadores |
+| 13 | EP-013 Gestión de Reportes | EP-009 | EP-012/EP-014 | Reportes |
+| 14 | EP-014 Gestión de Usuarios y Roles | EP-002 | EP-012/EP-013 | Administración avanzada de usuarios, permisos y sesiones |
+| 15 | EP-015 Configuración del Sistema | EP-002 | Todos los módulos | Parámetros institucionales y operativos |
+
+Orden operativo: `EP-001 → EP-002 → EP-007 → EP-006 → EP-008 → EP-003 → EP-004 → EP-005 → EP-009 → EP-010 → EP-011 → EP-012 → EP-013 → EP-014 → EP-015`.
+
+EP-002 contiene los fundamentos técnicos de autenticación. EP-014 depende de EP-002 y contiene el CRUD y administración avanzada; EP-012 y EP-013 no la bloquean. EP-004 genera la orden sin exigir cuenta y EP-009 la administra.
+
 ## Propósito del Documento
 Identificar y describir todas las épicas del proyecto. Cada épica agrupa un conjunto coherente de funcionalidades relacionadas que, en conjunto, entregan valor al negocio. Las épicas son el nivel más alto de descomposición del trabajo antes de las Features y User Stories.
 

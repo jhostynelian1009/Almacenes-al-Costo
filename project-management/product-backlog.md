@@ -1,5 +1,24 @@
 # Product Backlog — Almacenes al Costo
 
+> **Vigencia:** Las Features e historias detalladas existentes se conservan como insumo histórico. Antes de convertirlas en Issues deben remapearse a las 15 épicas vigentes. Las historias de tarjeta, pasarela y webhook se trasladan a alcance futuro.
+
+## Mapeo vigente del backlog
+
+| Épica vigente | Features ejecutables del MVP | Dependencias |
+| --- | --- | --- |
+| EP-001 | Entorno, Bootstrap/Vite, almacenamiento, layouts/componentes y pruebas base | Ninguna |
+| EP-002 | Login/logout, recuperación, sesiones, rate limiting, roles iniciales y panel protegido | EP-001 |
+| EP-003 | Inicio, navegación, catálogo y detalle | EP-001 para iniciar; EP-007, EP-006, EP-008 para cerrar |
+| EP-004 | Carrito, stock, datos, dirección, entrega, checkout invitado y orden | EP-003, EP-006, EP-008 |
+| EP-005 | Transferencia/Deuna, instrucciones, comprobante, revisión, decisión e historial | EP-002, EP-004 |
+| EP-006 | CRUD comercial de productos | EP-001, EP-002, EP-007 |
+| EP-007 | CRUD de categorías | EP-001, EP-002 |
+| EP-008 | Existencias, movimientos, reservas y disponibilidad | EP-002, EP-006 |
+| EP-009 | Estados, seguimiento y operación de pedidos | EP-002, EP-004, EP-005 |
+| EP-010 a EP-015 | Clientes, promociones, analítica, reportes, usuarios/roles y configuración | Según `epics.md` |
+
+Las historias US-030 a US-033, US-037, US-059 y US-061 relacionadas exclusivamente con tarjeta, adaptadores o webhooks no se eliminan: quedan candidatas para una versión futura sujeta a ADR-04. FT-001.2 se reasigna a EP-002; FT-007.2 a EP-007; FT-007.3 a EP-006; FT-007.4 a EP-008; FT-008.* a EP-009; la administración avanzada de FT-009.2 a EP-014.
+
 ## Propósito del Documento
 Registrar el inventario completo de trabajo del proyecto organizado jerárquicamente. Toda la información aquí contenida es extraída directamente del SPEC. Para el detalle técnico de cada funcionalidad, consultar la referencia al SPEC correspondiente.
 

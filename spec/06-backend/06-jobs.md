@@ -1,5 +1,7 @@
 # Documento: Jobs y Procesos Asíncronos
 
+> **Vigencia:** notificaciones y operaciones aplicables al flujo manual pueden estar en el MVP. Jobs exclusivos de tarjeta/webhook y limpieza de logs externos son futuros. Reservas pertenecen a EP-008/EP-004.
+
 ## 1. Objetivos del Documento
 Documentar los procesos asíncronos (Jobs y Scheduled Tasks) de **Almacenes al Costo**, especificando su propósito, cuándo se despachan, su prioridad en cola y sus efectos en el sistema.
 

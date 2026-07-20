@@ -1,5 +1,7 @@
 # Documento: Seguridad del Sistema
 
+> **Vigencia:** MIME/tamaño, almacenamiento privado y autorización del comprobante son MVP. PCI de tarjeta, HMAC, replay protection y seguridad de webhook son futuros.
+
 ## 1. Objetivos del Documento
 Establecer los controles de seguridad técnica requeridos para proteger el sistema **Almacenes al Costo** contra vulnerabilidades web comunes y garantizar la integridad de las transacciones de pago.
 

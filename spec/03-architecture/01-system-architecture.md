@@ -1,5 +1,7 @@
 # Documento: Arquitectura General del Sistema
 
+> **Vigencia:** Strategy/Adapter se conserva como evolución futura. El MVP implementa pago manual sin exigir fábrica, adaptadores o webhook.
+
 ## 1. Objetivos del Documento
 Definir los patrones de diseño, componentes técnicos y la estrategia de modularidad/desacoplamiento de la aplicación **Almacenes al Costo**.
 

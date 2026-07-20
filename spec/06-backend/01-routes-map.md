@@ -1,5 +1,7 @@
 # Documento: Mapa de Rutas de Laravel
 
+> **Alineación MVP:** El checkout genera órdenes sin login. `/admin` se protege desde EP-002. Webhook/callback de pasarela se conservan como diseño futuro y no se registran en el MVP.
+
 ## 1. Objetivos del Documento
 Especificar detalladamente las rutas HTTP de la aplicación en Laravel, indicando sus métodos, URLs, nombres de ruta y los controladores asociados.
 

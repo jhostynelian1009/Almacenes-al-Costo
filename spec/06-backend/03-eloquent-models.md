@@ -1,5 +1,7 @@
 # Documento: Modelos Eloquent y Relaciones
 
+> **Alineación MVP:** Se documentan Customer con User opcional, comprobante y trazabilidad de revisión. `WebhookLog` y modelos exclusivos de proveedor son futuros. Producto e Inventario mantienen responsabilidades separadas.
+
 ## 1. Objetivos del Documento
 Especificar las clases de modelos de Laravel, sus atributos rellenables y las relaciones ORM necesarias.
 

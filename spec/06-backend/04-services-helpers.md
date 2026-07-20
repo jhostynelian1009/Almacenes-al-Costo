@@ -1,5 +1,7 @@
 # Documento: Servicios, Contratos y DTOs del Backend
 
+> **Vigencia:** carga/revisión manual pertenecen al MVP. Contrato de gateway, fábrica, adaptadores y callbacks/webhooks se conservan como arquitectura futura, no entregables de EP-005.
+
 ## 1. Objetivos del Documento
 Especificar la responsabilidad de cada clase de servicio, contrato (interfaz), fábrica y DTO del módulo de pagos, garantizando separación de responsabilidades y eliminando duplicidades.
 

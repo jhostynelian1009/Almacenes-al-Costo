@@ -1,5 +1,7 @@
 # Documento: Diccionario de Datos
 
+> **Alineación:** Cliente puede existir sin User; cuenta de cliente es opcional. Comprobante es el archivo privado de pago manual y Pago en revisión el estado posterior a su carga. Gateway/webhook es vocabulario futuro.
+
 ## 1. Objetivos del Documento
 Describir detalladamente el propósito, tipo y restricciones de cada columna de las tablas de la base de datos para proveer una referencia inequívoca a los desarrolladores.
 

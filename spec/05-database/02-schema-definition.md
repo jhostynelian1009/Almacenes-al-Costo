@@ -1,5 +1,7 @@
 # Documento: Definición del Esquema Relacional
 
+> **Alineación MVP:** `customers.user_id` es nullable. El esquema inicial soporta métodos manuales, comprobantes, estado, `reviewed_by`, `reviewed_at`, observación/`rejection_reason` e historial. Tablas exclusivas de gateway, tarjeta o webhook son futuras.
+
 ## 1. Objetivos del Documento
 Especificar la definición física de las tablas de la base de datos MySQL, sus atributos, restricciones relacionales e índices recomendados para el rendimiento óptimo en producción.
 

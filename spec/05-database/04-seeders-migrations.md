@@ -1,5 +1,7 @@
 # Documento: Especificación de Seeders y Migraciones
 
+> **Vigencia:** Migraciones de webhook/transacciones automáticas quedan diferidas. El MVP prioriza usuarios/clientes, categorías, productos, inventario, órdenes/items, métodos manuales, pagos, comprobantes e historial. No se siembran datos comerciales inventados.
+
 ## 1. Objetivos del Documento
 Definir los requerimientos de scripts para la creación automática de tablas y la inyección inicial de datos clave del sistema.
 

@@ -1,5 +1,7 @@
 # Documento: Especificación Completa de Webhooks
 
+> **Estado: alcance futuro.** El MVP no implementa webhooks. Se conserva íntegramente esta arquitectura —HMAC, replay protection, idempotencia, reintentos, registros y errores— para una integración futura. No es criterio de cierre de EP-005.
+
 ## 1. Objetivos del Documento
 Definir exhaustivamente el protocolo de recepción, validación, procesamiento y manejo de errores de los webhooks de pasarelas de pago, garantizando seguridad, idempotencia y trazabilidad completa.
 

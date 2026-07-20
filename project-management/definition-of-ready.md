@@ -1,5 +1,7 @@
 # Definition of Ready (DoR) — Almacenes al Costo
 
+> **Alineación vigente:** una historia de EP-005 manual no requiere credenciales ni webhook. Las comprobaciones específicas de pasarela aplican únicamente al alcance futuro de ADR-04. EP-004 debe admitir checkout invitado y EP-014 debe partir de EP-002 sin duplicarlo.
+
 ## Propósito del Documento
 Establecer los criterios que debe cumplir una **User Story o Task** antes de poder ser seleccionada para su desarrollo dentro de un Sprint. Una tarea que no cumple con todos los criterios de este documento **no puede comenzarse**.
 

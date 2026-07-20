@@ -1,5 +1,7 @@
 # Plan de Versiones (Release Plan) — Almacenes al Costo
 
+> **Vigencia:** V1.0 usa 15 épicas, checkout invitado y pago manual. Pasarela automática es post-MVP. Orden: EP-001, EP-002, EP-007, EP-006, EP-008, EP-003, EP-004, EP-005, EP-009, EP-010, EP-011, EP-012, EP-013, EP-014 y EP-015.
+
 ## Propósito del Documento
 Definir las versiones planificadas del sistema, el alcance de cada una y su relación con las épicas y el roadmap del proyecto. Cada versión representa un conjunto coherente y funcional de capacidades entregadas.
 

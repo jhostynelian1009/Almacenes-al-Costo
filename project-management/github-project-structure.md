@@ -1,5 +1,13 @@
 # Estructura de GitHub Projects — Almacenes al Costo
 
+> **Vigencia:** Se conservan jerarquía, labels, milestones, convenciones y flujo. La tabla histórica de labels EP-001–EP-010 debe reemplazarse en GitHub por EP-001–EP-015 con los nombres vigentes de `epics.md`; los ejemplos de webhook se consideran alcance futuro.
+
+## Columnas oficiales vigentes
+
+`Backlog → Spec → UI/UX → Desarrollo → Testing → Cliente → Finalizado`
+
+La numeración de épicas es un identificador histórico, no el orden de implementación. Las dependencias se documentan en `epics.md` y los Issues de pasarela automática no pertenecen al milestone MVP.
+
 ## Propósito del Documento
 Documentar la estructura, convenciones y configuración utilizada en GitHub para la gestión y seguimiento del proyecto. Este documento es la guía de referencia para crear Issues, configurar el tablero y mantener la trazabilidad del trabajo.
 

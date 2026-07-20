@@ -1,5 +1,18 @@
 # Planificación de Sprints — Almacenes al Costo
 
+> **Vigencia:** Los cinco sprints detallados se conservan como estimación histórica. No deben ejecutarse con la asignación antigua de épicas. La secuencia vigente es la siguiente y se reestima en cada Sprint Planning.
+
+## Secuencia vigente
+
+| Orden | Épica | Condición de entrada |
+| ---: | --- | --- |
+| 1-2 | EP-001, EP-002 | Base y autenticación separadas |
+| 3-5 | EP-007, EP-006, EP-008 | Categorías → Productos → Inventario |
+| 6-9 | EP-003, EP-004, EP-005, EP-009 | Catálogo → checkout invitado → pago manual → operación |
+| 10-15 | EP-010, EP-011, EP-012, EP-013, EP-014, EP-015 | Dependencias de `epics.md` |
+
+El antiguo Sprint 3 no autoriza pasarela automática en el MVP; sus tareas de tarjeta, `PaymentFactory`, webhooks y credenciales se consideran planificación futura. EP-001 no incluye Auth y EP-014 no bloquea Dashboard o Reportes.
+
 ## Propósito del Documento
 Definir la estructura, objetivo, alcance y entregables de cada uno de los cinco sprints del proyecto MVP. Este documento guía la conversión del Product Backlog en trabajo ejecutable en GitHub Projects.
 

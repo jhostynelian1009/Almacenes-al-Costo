@@ -1,4 +1,6 @@
-# ADR 02: Adopción de Validación Manual de Pagos en MVP (Superado)
+# ADR 02: Adopción de Validación Manual de Pagos en MVP
+
+> **Estado vigente: Aceptado para el MVP.** La clasificación histórica “Superado” ya no aplica: transferencia y Deuna con comprobante, Pago en revisión y decisión auditada son el flujo oficial. ADR-04 queda diferida.
 
 **Estado**: Superado por [ADR 04](file:///c:/xampp/htdocs/Almacenes-al-Costo/spec/11-decisions/04-adr-integracion-pasarela.md)
 

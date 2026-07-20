@@ -1,5 +1,7 @@
 # Documento: Estructura Física y Mapeo en Laravel
 
+> **Alcance vigente:** La estructura detallada se conserva como referencia evolutiva. En el MVP solo se implementan piezas de pago manual. Interfaces, adaptadores, fábrica, controlador/logs de webhook y jobs externos pertenecen al futuro de ADR-04.
+
 ## 1. Objetivos del Documento
 Describir la organización física de archivos y directorios en el repositorio de Laravel del proyecto **Almacenes al Costo**, sirviendo como mapa de referencia para el agente de implementación (Codex).
 

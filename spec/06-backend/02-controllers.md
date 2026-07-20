@@ -1,5 +1,7 @@
 # Documento: Especificación de Controladores y Métodos
 
+> **Alineación MVP:** Checkout genera la orden invitada; Payment gestiona instrucciones/comprobantes; la revisión administrativa es autorizada y auditada. `PaymentWebhookController` es futuro.
+
 ## 1. Objetivos del Documento
 Definir las responsabilidades, métodos y lógica esperada de cada controlador de Laravel. Los controladores **no contienen lógica de negocio**: delegan en servicios y despachan eventos.
 

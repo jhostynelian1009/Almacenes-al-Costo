@@ -1,5 +1,7 @@
 # Documento: Requerimientos Funcionales
 
+> **Alineación vigente:** tarjeta/pasarela es futuro. El MVP exige checkout invitado, transferencia/Deuna, comprobante, revisión autorizada, observación e historial.
+
 ## 1. Objetivos del Documento
 Especificar formalmente el listado de requerimientos funcionales requeridos para el desarrollo de los módulos de Cliente y Administrador.
 

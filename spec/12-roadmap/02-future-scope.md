@@ -1,5 +1,7 @@
 # Documento: Alcance e Integraciones Futuras
 
+> **Incluye:** pasarela automática, tarjetas, adaptadores, webhooks, HMAC, replay protection, reintentos e idempotencia/conciliación externa.
+
 ## 1. Objetivos del Documento
 Documentar las características y requerimientos planificados para versiones posteriores al MVP para guiar el crecimiento comercial del sistema.
 

@@ -1,5 +1,7 @@
 # Registro de Decisión: Checkout Inteligente sin Registro Obligatorio
 
+> **Estado vigente: Aceptado.** Customer puede existir sin User; la cuenta es opcional y puede crearse después de comprar. EP-004 no depende de EP-002 para el checkout invitado.
+
 ## 1. Contexto y Problema
 Exigir a los clientes crear una cuenta antes de realizar la compra genera una alta tasa de abandono en el carrito de compras, especialmente en la venta de electrodomésticos y muebles de hogar donde el ticket promedio es alto y las compras no son cotidianas.
 

@@ -1,5 +1,7 @@
 # Documento: Casos de Prueba Detallados
 
+> **Clasificación vigente:** pago manual y checkout invitado son obligatorios. Los casos 03–05 de tarjeta, fallo de pasarela e idempotencia de webhook se conservan como suite futura y no bloquean EP-005.
+
 ## 1. Objetivos del Documento
 Definir los escenarios exactos de prueba de aceptación y técnicos que el sistema debe aprobar antes de pasar a producción.
 
@@ -45,4 +47,3 @@ Definir los escenarios exactos de prueba de aceptación y técnicos que el siste
 ## 3. Referencias y Dependencias
 *   [09-testing/README.md](file:///c:/xampp/htdocs/Almacenes-al-Costo/spec/09-testing/README.md)
 *   [08-security/02-upload-security.md](file:///c:/xampp/htdocs/Almacenes-al-Costo/spec/08-security/02-upload-security.md)
-

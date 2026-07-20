@@ -1,5 +1,7 @@
 # Documento: Casos de Uso del Sistema
 
+> **Clasificación vigente:** los casos manuales son MVP; CU-03 de pasarela se conserva como futuro. La cuenta posterior es opcional.
+
 ## 1. Objetivos del Documento
 Describir detalladamente los flujos de interacción entre los diferentes actores y la plataforma en escenarios críticos de la aplicación.
 

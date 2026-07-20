@@ -1,5 +1,7 @@
 # Documento: Flujos de Procesos y Workflows
 
+> **MVP vigente:** carrito → checkout invitado → orden → transferencia/Deuna → comprobante → Pago en revisión → aprobación/rechazo. Las ramas de tarjeta/webhook son futuras.
+
 ## 1. Objetivos del Documento
 Diagramar y detallar paso a paso los procesos lógicos y operativos de **Almacenes al Costo**, incluyendo el flujo completo del Checkout y el ciclo de validación de pedidos manuales.
 

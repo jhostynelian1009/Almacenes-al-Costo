@@ -1,5 +1,7 @@
 # Documento: Fases de Entrega del MVP
 
+> **Roadmap vigente:** `EP-001 → EP-002 → EP-007 → EP-006 → EP-008 → EP-003 → EP-004 → EP-005 → EP-009 → EP-010 → EP-011 → EP-012 → EP-013 → EP-014 → EP-015`. Los hitos automáticos conservados debajo son futuros.
+
 ## 1. Objetivos del Documento
 Estructurar el plan de entregas funcionales secuenciales necesarias para completar el desarrollo y despliegue del MVP.
 

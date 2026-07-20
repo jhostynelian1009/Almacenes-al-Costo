@@ -1,5 +1,7 @@
 # Documento: Reglas de Negocio
 
+> **Alineación vigente:** Customer puede existir sin User; EP-004 crea la orden; el pago manual pasa a Pago en revisión y requiere decisión auditada. Las reglas de pasarela son futuras.
+
 ## 1. Objetivos del Documento
 Establecer las reglas lógicas e inmutables que norman el comportamiento del sistema **Almacenes al Costo** y los ciclos de vida de los dominios clave.
 

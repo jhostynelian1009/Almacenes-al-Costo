@@ -1,5 +1,7 @@
 # Documento: Plan de Pruebas del Sistema
 
+> **Cobertura vigente:** EP-001 configuración/build/layouts; EP-002 autenticación; EP-004 checkout invitado/stock/orden; EP-005 comprobante, Pago en revisión, autorización, decisión y auditoría. Tarjeta/webhook/HMAC/replay son futuros.
+
 ## 1. Objetivos del Documento
 Definir la estrategia global de pruebas funcionales y técnicas del sistema **Almacenes al Costo**.
 

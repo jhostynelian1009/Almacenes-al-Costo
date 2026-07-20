@@ -1,5 +1,7 @@
 # Documento: Autenticación y Autorización
 
+> **Distribución vigente:** EP-002 contiene autenticación base, sesiones, roles iniciales y panel protegido; EP-014 la administración avanzada. El checkout invitado no requiere autenticación.
+
 ## 1. Objetivos del Documento
 Especificar los flujos de inicio de sesión de administradores y el control de accesos a las diferentes secciones protegidas del sistema.
 

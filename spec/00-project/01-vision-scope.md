@@ -1,5 +1,7 @@
 # Documento: Visión y Alcance del Proyecto
 
+> **Alineación vigente:** el MVP permite checkout sin cuenta y pago manual por transferencia/Deuna con comprobante. Pasarela automática y tarjetas son futuras.
+
 ## 1. Objetivos del Documento
 Definir los límites, el propósito de negocio y el alcance del Producto Mínimo Viable (MVP) para la tienda web **Almacenes al Costo**.
 

@@ -1,5 +1,7 @@
 # Definition of Done (DoD) — Almacenes al Costo
 
+> **Alineación vigente:** los criterios de adaptadores/webhooks aplican solo a una futura integración automática. Para el MVP, EP-001 verifica configuración/build/layouts; EP-002 autenticación; EP-004 checkout invitado; y EP-005 comprobante, Pago en revisión, autorización, decisión, estados y auditoría.
+
 ## Propósito del Documento
 Establecer los criterios que debe cumplir una **User Story o Task** para ser declarada **"Done" (Terminada)** y poder cerrar el Issue correspondiente en GitHub Projects. Una tarea no está "Done" hasta que cumple con **todos** los criterios aplicables de este documento.
 

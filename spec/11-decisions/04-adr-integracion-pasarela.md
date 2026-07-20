@@ -1,4 +1,6 @@
-# ADR 04: Integración Desacoplada de Pasarela de Pagos en el MVP
+# ADR 04: Integración Desacoplada de Pasarela de Pagos (Futuro)
+
+> **Estado vigente: Diferido.** Se conservan contexto, alternativas y diseño Strategy/Adapter como referencia. Tarjetas, proveedores, webhooks, HMAC, replay protection, idempotencia externa y reintentos no son requisitos del MVP ni de EP-005.
 
 **Estado**: Aprobado / Aceptado
 

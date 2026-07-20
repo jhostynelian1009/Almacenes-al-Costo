@@ -1,5 +1,7 @@
 # Documento: Integridad y Protección de Datos del Negocio
 
+> **Alineación MVP:** idempotencia administrativa/transiciones manuales sí aplican; idempotencia externa y replay protection son futuros. EP-004 crea la orden y EP-009 administra estados.
+
 ## 1. Objetivos del Documento
 Garantizar la protección del sistema contra ataques y vulnerabilidades web OWASP Top 10 utilizando recursos nativos de Laravel.
 

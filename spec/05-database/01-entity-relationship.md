@@ -1,5 +1,7 @@
 # Documento: Modelo Entidad-Relación
 
+> **Alineación MVP:** Cliente puede existir sin User y su vínculo es opcional. Entidades de webhook/pasarela son futuras. El MVP requiere pago manual, comprobante, revisor, fecha, observación/rechazo e historial.
+
 ## 1. Objetivos del Documento
 Definir gráficamente las entidades principales del sistema y sus relaciones para soportar los procesos operativos de la tienda virtual.
 

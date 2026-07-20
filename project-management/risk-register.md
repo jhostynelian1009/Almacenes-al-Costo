@@ -1,5 +1,17 @@
 # Registro de Riesgos — Almacenes al Costo
 
+> **Vigencia:** Los riesgos de pasarela, credenciales, webhooks y exclusión CSRF se conservan para ADR-04 como alcance futuro; no condicionan el MVP manual.
+
+## Riesgos vigentes adicionales
+
+| ID | Riesgo | Probabilidad | Impacto | Mitigación |
+| --- | --- | --- | --- | --- |
+| R-009 | Exigir cuenta durante checkout | Media | Alto | Pruebas de invitado y relación Customer/User opcional |
+| R-010 | Duplicar responsabilidades de EP-002 y EP-014 | Media | Medio | Límites y trazabilidad por épica |
+| R-011 | Ejecutar Productos antes de Categorías | Media | Alto | EP-007 bloquea EP-006 |
+| R-012 | Mezclar datos comerciales con inventario | Media | Alto | Límites de dominio y EP-008 posterior |
+| R-013 | Estados manuales de pago/pedido inconsistentes | Media | Alto | Transacciones, historial y pruebas de transición |
+
 ## Propósito del Documento
 Identificar, evaluar y documentar los riesgos conocidos del proyecto, junto con su probabilidad de ocurrencia, impacto en el proyecto y el plan de mitigación correspondiente. Este registro se actualiza al inicio de cada Sprint.
 

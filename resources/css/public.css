@@ -1,1 +1,8 @@
-/* Estilos específicos para el sitio público */
+.public-navbar { background: rgba(255, 248, 237, .96); border-bottom: 1px solid var(--aac-border); }
+.brand-mark { color: var(--aac-charcoal); font-weight: 800; letter-spacing: -.03em; }
+.public-hero { background: linear-gradient(135deg, var(--aac-cream) 20%, var(--aac-peach-soft) 100%); padding: clamp(5rem, 10vw, 8rem) 0; }
+.public-hero h1 { font-size: clamp(2.5rem, 7vw, 5rem); letter-spacing: -.05em; max-width: 12ch; }
+.benefit-card { background: var(--aac-white); border: 1px solid var(--aac-border); border-radius: var(--aac-radius); height: 100%; }
+.public-cta { background: var(--aac-charcoal); border-radius: calc(var(--aac-radius) * 1.25); color: var(--aac-white); }
+.public-footer { background: var(--aac-charcoal); color: var(--aac-footer-text); }
+.public-footer a { color: var(--aac-footer-link); }

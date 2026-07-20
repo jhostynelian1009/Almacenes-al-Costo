@@ -1,1 +1,11 @@
-/* Estilos específicos para el panel administrativo */
+.admin-navbar { background: var(--aac-charcoal); }
+.admin-shell { min-height: calc(100vh - 4rem); }
+.admin-sidebar { background: var(--aac-white); border-right: 1px solid var(--aac-border); width: 17rem; }
+.admin-sidebar .nav-link { color: var(--aac-charcoal); border-radius: .65rem; padding: .7rem .9rem; }
+.admin-sidebar .nav-link.active { background: var(--aac-peach); color: var(--aac-charcoal); font-weight: 700; }
+.admin-sidebar .nav-link.disabled { color: var(--aac-muted); opacity: .58; }
+.admin-main { min-width: 0; }
+.metric-card { border: 1px solid var(--aac-border); border-radius: var(--aac-radius); box-shadow: var(--aac-shadow); }
+.metric-card__value { color: var(--aac-peach-dark); font-size: 1.75rem; font-weight: 700; }
+.admin-footer { border-top: 1px solid var(--aac-border); color: var(--aac-muted); }
+@media (min-width: 992px) { .admin-sidebar { flex: 0 0 17rem; } .admin-main { flex: 1; } }

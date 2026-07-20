@@ -1,3 +1,33 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
-/* Estilos globales base para la aplicación */
+:root {
+    --aac-cream: #fff8ed;
+    --aac-cream-deep: #f7ead9;
+    --aac-peach: #e8895b;
+    --aac-peach-dark: #b9532f;
+    --aac-charcoal: #292725;
+    --aac-muted: #6d655f;
+    --aac-white: #ffffff;
+    --aac-border: #e7d8c8;
+    --aac-peach-soft: #f8c5a9;
+    --aac-footer-text: #f4ebe3;
+    --aac-footer-link: #ffd5bd;
+    --aac-radius: 1rem;
+    --aac-shadow: 0 0.75rem 2rem rgba(41, 39, 37, 0.08);
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--aac-cream); color: var(--aac-charcoal); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--aac-peach-dark); }
+a:hover { color: var(--aac-charcoal); }
+:focus-visible { outline: 3px solid var(--aac-peach-dark); outline-offset: 3px; }
+.btn-brand {
+    --bs-btn-color: var(--aac-white);
+    --bs-btn-bg: var(--aac-peach-dark);
+    --bs-btn-border-color: var(--aac-peach-dark);
+    --bs-btn-hover-color: var(--aac-white);
+    --bs-btn-hover-bg: var(--aac-charcoal);
+    --bs-btn-hover-border-color: var(--aac-charcoal);
+}
+.skip-link { position: fixed; top: -5rem; left: 1rem; z-index: 2000; }
+.skip-link:focus { top: 1rem; }

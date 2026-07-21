@@ -3,9 +3,16 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\PublicPageController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'public.home')->name('home');
+Route::controller(PublicPageController::class)->group(function () {
+    Route::get('/', 'home')->name('home');
+    Route::get('/catalogo', 'catalog')->name('catalog.index');
+    Route::get('/categorias', 'categories')->name('categories.index');
+    Route::get('/promociones', 'promotions')->name('promotions.index');
+    Route::get('/informacion', 'information')->name('information');
+});
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');

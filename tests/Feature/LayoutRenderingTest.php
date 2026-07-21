@@ -13,7 +13,7 @@ class LayoutRenderingTest extends TestCase
     public function test_public_home_renders_with_its_named_route(): void
     {
         $this->assertSame(url('/'), route('home'));
-        $this->get(route('home'))->assertOk()->assertSee('Nueva experiencia digital');
+        $this->get(route('home'))->assertOk()->assertSee('Almacenes al Costo');
     }
 
     public function test_admin_dashboard_renders_with_its_named_route(): void

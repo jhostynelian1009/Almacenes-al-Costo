@@ -8,7 +8,10 @@ class PublicPageController extends Controller
 {
     public function home(): View
     {
-        return view('public.home');
+        return view('public.home', [
+            'featuredBanners' => collect(),
+            'featuredProducts' => collect(),
+        ]);
     }
 
     public function catalog(): View

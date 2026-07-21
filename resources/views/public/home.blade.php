@@ -1,52 +1,63 @@
 @extends('layouts.public')
 
 @section('title', 'Almacenes al Costo | Inicio')
-@section('description', 'Sitio público de Almacenes al Costo.')
+@section('description', 'Página de inicio y productos destacados de Almacenes al Costo.')
 
 @section('content')
-    <section class="public-hero" aria-labelledby="home-title">
+    <section class="home-hero" aria-labelledby="home-title" data-home-section="featured-banners">
         <div class="container py-5 py-lg-6">
-            <div class="row align-items-center g-4 g-lg-5">
-                <div class="col-lg-7">
-                    <p class="section-eyebrow mb-2">Sitio oficial</p>
-                    <h1 class="display-3 fw-bold" id="home-title">Almacenes al Costo</h1>
-                    <p class="lead col-xl-9">Explora la estructura inicial de nuestra experiencia pública.</p>
-                    <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
-                        <a class="btn btn-brand btn-lg" href="{{ route('catalog.index') }}">Ir al catálogo</a>
-                        <a class="btn btn-outline-brand btn-lg" href="{{ route('information') }}">Información institucional</a>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <aside class="hero-status-card p-4 p-md-5" aria-labelledby="availability-title">
-                        <h2 class="h4" id="availability-title">Contenido en preparación</h2>
-                        <p class="mb-0">El catálogo y las funciones comerciales se incorporarán en entregas posteriores.</p>
-                    </aside>
-                </div>
+            <div class="home-hero__heading mb-4 mb-lg-5">
+                <p class="section-eyebrow mb-2">Sitio oficial</p>
+                <h1 class="display-3 fw-bold mb-3" id="home-title">Almacenes al Costo</h1>
+                <p class="lead mb-4">Consulta aquí los banners y productos destacados publicados por la tienda.</p>
+                <a class="btn btn-brand btn-lg" href="{{ route('catalog.index') }}" data-home-cta="catalog">
+                    Ir al catálogo
+                </a>
             </div>
+
+            <x-public.featured-carousel :banners="$featuredBanners" />
         </div>
     </section>
 
-    <section class="container py-5" aria-labelledby="navigation-title">
-        <div class="row align-items-end g-3 mb-4">
-            <div class="col-lg-8">
-                <p class="section-eyebrow mb-2">Navegación pública</p>
-                <h2 class="display-6 fw-bold mb-0" id="navigation-title">Encuentra cada sección fácilmente</h2>
-            </div>
-        </div>
-        <div class="row g-3">
-            @foreach ([
-                ['Catálogo', 'Acceso inicial a la futura oferta de productos.', 'catalog.index'],
-                ['Categorías', 'Acceso inicial a la futura organización del catálogo.', 'categories.index'],
-                ['Promociones', 'Espacio reservado para promociones confirmadas.', 'promotions.index'],
-            ] as [$title, $text, $route])
-                <div class="col-md-4">
-                    <article class="public-navigation-card p-4">
-                        <h3 class="h5">{{ $title }}</h3>
-                        <p>{{ $text }}</p>
-                        <a class="stretched-link" href="{{ route($route) }}">Visitar {{ strtolower($title) }}</a>
-                    </article>
+    <section class="home-products" aria-labelledby="featured-products-title" data-home-section="featured-products">
+        <div class="container py-5 py-lg-6">
+            <div class="row align-items-end g-3 mb-4">
+                <div class="col-lg-8">
+                    <x-public.section-heading
+                        eyebrow="Selección destacada"
+                        title="Productos destacados"
+                        heading-id="featured-products-title"
+                        description="Los productos seleccionados se mostrarán aquí cuando el catálogo disponga de datos publicados."
+                    />
                 </div>
-            @endforeach
+                <div class="col-lg-4 text-lg-end">
+                    <a class="btn btn-outline-brand" href="{{ route('catalog.index') }}" data-home-cta="featured-products">
+                        Ver catálogo
+                    </a>
+                </div>
+            </div>
+
+            @if ($featuredProducts->isEmpty())
+                <x-public.empty-state
+                    name="featured-products"
+                    title="No hay productos destacados disponibles"
+                    message="La selección se publicará cuando existan productos reales disponibles para mostrar."
+                />
+            @else
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+                    @foreach ($featuredProducts as $product)
+                        <div class="col">
+                            <x-public.product-card
+                                :name="$product['name']"
+                                :image-url="$product['image_url'] ?? null"
+                                :image-alt="$product['image_alt'] ?? null"
+                                :price="$product['price'] ?? null"
+                                :url="$product['url'] ?? null"
+                            />
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </section>
 @endsection

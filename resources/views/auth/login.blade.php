@@ -39,7 +39,10 @@
                         <button class="btn btn-brand w-100" type="submit">Iniciar sesión</button>
                     </form>
 
-                    <a class="d-inline-block mt-4" href="{{ route('home') }}">Volver al sitio público</a>
+                    <div class="d-flex flex-column align-items-start gap-2 mt-4">
+                        <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
+                        <a href="{{ route('home') }}">Volver al sitio público</a>
+                    </div>
                 </div>
             </div>
         </div>

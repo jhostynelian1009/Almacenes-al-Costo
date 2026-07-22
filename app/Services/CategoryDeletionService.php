@@ -21,6 +21,10 @@ class CategoryDeletionService
                 throw CategoryDeletionException::hasSubcategories();
             }
 
+            if ($lockedCategory->products()->withTrashed()->exists()) {
+                throw CategoryDeletionException::hasProducts();
+            }
+
             try {
                 $lockedCategory->delete();
             } catch (QueryException $exception) {

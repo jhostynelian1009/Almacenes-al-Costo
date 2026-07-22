@@ -36,6 +36,8 @@ Route::middleware(['auth', 'active', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::get('categories/tree', [CategoryController::class, 'tree'])
+            ->name('categories.tree');
         Route::patch('categories/{category}/status', [CategoryController::class, 'updateStatus'])
             ->name('categories.status');
         Route::resource('categories', CategoryController::class);

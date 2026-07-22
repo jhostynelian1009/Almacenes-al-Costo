@@ -64,10 +64,66 @@ class Category extends Model
         return $query->orderBy('display_order')->orderBy('name');
     }
 
+    /**
+     * @return array<int, int>
+     */
+    public function descendantIds(): array
+    {
+        if (! $this->exists) {
+            return [];
+        }
+
+        $childrenByParent = static::query()
+            ->get(['id', 'parent_id'])
+            ->groupBy(fn (Category $category): string => (string) $category->parent_id);
+
+        $descendantIds = [];
+        $visited = [(string) $this->getKey() => true];
+        $pending = $childrenByParent
+            ->get((string) $this->getKey(), collect())
+            ->pluck('id')
+            ->all();
+
+        while ($pending !== []) {
+            $categoryId = (int) array_pop($pending);
+            $key = (string) $categoryId;
+
+            if (isset($visited[$key])) {
+                continue;
+            }
+
+            $visited[$key] = true;
+            $descendantIds[] = $categoryId;
+
+            foreach ($childrenByParent->get($key, collect()) as $child) {
+                $pending[] = $child->getKey();
+            }
+        }
+
+        return $descendantIds;
+    }
+
+    public function wouldCreateCycle(?int $parentId): bool
+    {
+        if ($parentId === null || ! $this->exists) {
+            return false;
+        }
+
+        if ((string) $parentId === (string) $this->getKey()) {
+            return true;
+        }
+
+        return in_array($parentId, $this->descendantIds(), true);
+    }
+
     private function ensureValidStructure(): void
     {
         if ($this->parent_id !== null && $this->getKey() !== null && (string) $this->parent_id === (string) $this->getKey()) {
             throw new LogicException('A category cannot be its own parent.');
+        }
+
+        if ($this->isDirty('parent_id') && $this->wouldCreateCycle($this->parent_id === null ? null : (int) $this->parent_id)) {
+            throw new LogicException('A category cannot use one of its descendants as parent.');
         }
 
         if ($this->display_order !== null && $this->display_order < 0) {

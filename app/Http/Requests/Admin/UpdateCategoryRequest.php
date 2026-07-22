@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Enums\UserRole;
 use App\Models\Category;
+use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -32,6 +33,11 @@ class UpdateCategoryRequest extends FormRequest
                 'integer',
                 Rule::exists('categories', 'id'),
                 Rule::notIn([$category->getKey()]),
+                function (string $attribute, mixed $value, Closure $fail) use ($category): void {
+                    if ($value !== null && $category->wouldCreateCycle((int) $value)) {
+                        $fail('La categoría padre seleccionada generaría un ciclo jerárquico.');
+                    }
+                },
             ],
         ];
     }

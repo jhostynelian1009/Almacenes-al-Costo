@@ -1,33 +1,32 @@
 @extends('layouts.admin')
 
-@section('title', 'Inventario')
+@section('title', 'Alertas de inventario')
 @php
-    $breadcrumbs = [['label' => 'Inventario']];
+    $breadcrumbs = [
+        ['label' => 'Inventario', 'url' => route('admin.inventory.index')],
+        ['label' => 'Alertas'],
+    ];
     $stockStatusLabels = [
         'out_of_stock' => 'Agotado',
         'low_stock' => 'Stock bajo',
-        'sufficient' => 'Suficiente',
     ];
     $stockStatusClasses = [
         'out_of_stock' => 'text-bg-danger',
         'low_stock' => 'text-bg-warning',
-        'sufficient' => 'text-bg-success',
     ];
 @endphp
 
 @section('content')
-    <x-shared.page-header title="Inventario" subtitle="Consulta las existencias actuales de los productos.">
-        <a class="btn btn-outline-primary" href="{{ route('admin.inventory.alerts') }}">Ver alertas de inventario</a>
+    <x-shared.page-header title="Alertas de inventario" subtitle="Productos agotados o con disponibilidad igual o inferior al mínimo.">
+        <a class="btn btn-outline-secondary" href="{{ route('admin.inventory.index') }}">Volver al inventario</a>
     </x-shared.page-header>
 
     <div class="card shadow-sm">
         <div class="card-body p-0">
             @if ($inventories->isEmpty())
                 <div class="p-4 text-center" role="status">
-                    <h2 class="h5">No hay inventarios disponibles</h2>
-                    <p class="text-body-secondary mb-0">
-                        Los inventarios se crean automáticamente cuando se registra un producto.
-                    </p>
+                    <h2 class="h5">Sin alertas de inventario</h2>
+                    <p class="text-body-secondary mb-0">No existen productos con stock bajo o agotado.</p>
                 </div>
             @else
                 <div class="table-responsive">
@@ -37,12 +36,11 @@
                                 <th scope="col">Producto</th>
                                 <th scope="col">SKU</th>
                                 <th scope="col">Categoría</th>
-                                <th scope="col" class="text-end">Stock total</th>
+                                <th scope="col" class="text-end">Stock</th>
                                 <th scope="col" class="text-end">Reservado</th>
                                 <th scope="col" class="text-end">Disponible</th>
                                 <th scope="col" class="text-end">Mínimo</th>
                                 <th scope="col">Estado del stock</th>
-                                <th scope="col">Estado del producto</th>
                                 <th scope="col" class="text-end">Acciones</th>
                             </tr>
                         </thead>
@@ -59,11 +57,6 @@
                                     <td>
                                         <span class="badge {{ $stockStatusClasses[$inventory->stock_status] }}">
                                             {{ $stockStatusLabels[$inventory->stock_status] }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge {{ $inventory->product->is_active ? 'text-bg-success' : 'text-bg-secondary' }}">
-                                            {{ $inventory->product->is_active ? 'Activo' : 'Inactivo' }}
                                         </span>
                                     </td>
                                     <td class="text-end">

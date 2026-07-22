@@ -15,10 +15,22 @@
         'reserve' => 'Reserva',
         'release' => 'Liberación',
     ];
+    $stockStatusLabels = [
+        'out_of_stock' => 'Agotado',
+        'low_stock' => 'Stock bajo',
+        'sufficient' => 'Suficiente',
+    ];
+    $stockStatusClasses = [
+        'out_of_stock' => 'text-bg-danger',
+        'low_stock' => 'text-bg-warning',
+        'sufficient' => 'text-bg-success',
+    ];
 @endphp
 
 @section('content')
-    <x-shared.page-header :title="'Inventario de '.$product->name" subtitle="Existencias actuales e historial de movimientos." />
+    <x-shared.page-header :title="'Inventario de '.$product->name" subtitle="Existencias actuales e historial de movimientos.">
+        <a class="btn btn-outline-primary" href="{{ route('admin.inventory.alerts') }}">Ver alertas de inventario</a>
+    </x-shared.page-header>
 
     @if ($productDeleted)
         <div class="alert alert-warning" role="status">
@@ -61,11 +73,52 @@
 
                 <dt class="col-sm-4 col-lg-3">Stock mínimo</dt>
                 <dd class="col-sm-8 col-lg-9">{{ $inventory->min_stock }}</dd>
+
+                <dt class="col-sm-4 col-lg-3">Estado del stock</dt>
+                <dd class="col-sm-8 col-lg-9">
+                    <span class="badge {{ $stockStatusClasses[$inventory->stock_status] }}">
+                        {{ $stockStatusLabels[$inventory->stock_status] }}
+                    </span>
+                </dd>
             </dl>
         </div>
     </section>
 
     @unless ($productDeleted)
+        <section class="card shadow-sm mb-4" aria-labelledby="minimum-stock-heading">
+            <div class="card-body">
+                <h2 class="h5" id="minimum-stock-heading">Configurar stock mínimo</h2>
+                <p class="text-body-secondary">
+                    La alerta se activa cuando el stock disponible es igual o inferior al mínimo.
+                </p>
+                <form method="POST" action="{{ route('admin.inventory.minimum-stock.update', $inventory) }}">
+                    @csrf
+                    @method('PATCH')
+
+                    <div class="mb-3">
+                        <label class="form-label" for="min_stock">Stock mínimo</label>
+                        <input
+                            class="form-control @error('min_stock') is-invalid @enderror"
+                            id="min_stock"
+                            name="min_stock"
+                            type="number"
+                            min="0"
+                            max="4294967295"
+                            step="1"
+                            value="{{ old('min_stock', $inventory->min_stock) }}"
+                            @error('min_stock') aria-describedby="min-stock-error" aria-invalid="true" @enderror
+                            required
+                        >
+                        @error('min_stock')
+                            <div class="invalid-feedback" id="min-stock-error" role="alert">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Actualizar stock mínimo</button>
+                </form>
+            </div>
+        </section>
+
         <section class="card shadow-sm mb-4" aria-labelledby="inventory-actions-heading">
             <div class="card-body">
                 <h2 class="h5" id="inventory-actions-heading">Registrar movimiento</h2>

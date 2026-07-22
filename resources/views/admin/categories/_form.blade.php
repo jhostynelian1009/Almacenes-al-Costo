@@ -34,6 +34,26 @@
     @enderror
 </div>
 
+<div class="mb-3">
+    <label class="form-label" for="display_order">Orden de visualización</label>
+    <input
+        class="form-control @error('display_order') is-invalid @enderror"
+        id="display_order"
+        name="display_order"
+        type="number"
+        value="{{ old('display_order', $category?->display_order ?? 0) }}"
+        min="0"
+        step="1"
+        inputmode="numeric"
+        required
+        aria-describedby="display-order-help @error('display_order') display-order-error @enderror"
+    >
+    <div class="form-text" id="display-order-help">Los valores menores aparecen primero.</div>
+    @error('display_order')
+        <div class="invalid-feedback" id="display-order-error">{{ $message }}</div>
+    @enderror
+</div>
+
 <div class="mb-4">
     <label class="form-label" for="parent_id">Categoría padre <span class="text-body-secondary">(opcional)</span></label>
     <select

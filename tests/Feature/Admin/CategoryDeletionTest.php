@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Exceptions\CategoryDeletionException;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use App\Services\CategoryDeletionService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -70,6 +71,57 @@ class CategoryDeletionTest extends TestCase
         $this->assertModelExists($parent);
         $this->assertModelExists($child);
         $this->assertModelExists($grandchild);
+    }
+
+    public function test_active_product_blocks_category_deletion_without_exposing_internal_details(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->for($category)->active()->create();
+
+        $this->actingAs($admin)
+            ->delete(route('admin.categories.destroy', $category))
+            ->assertRedirect(route('admin.categories.index'))
+            ->assertSessionHas('error', CategoryDeletionException::hasProducts()->getMessage());
+
+        $message = session('error');
+
+        $this->assertIsString($message);
+        $this->assertStringNotContainsString('SQLSTATE', $message);
+        $this->assertStringNotContainsString('products_category_id_foreign', $message);
+        $this->assertStringNotContainsString('delete from', strtolower($message));
+        $this->assertModelExists($category);
+        $this->assertModelExists($product);
+    }
+
+    public function test_inactive_product_also_blocks_category_deletion(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->for($category)->inactive()->create();
+
+        $this->actingAs($admin)
+            ->delete(route('admin.categories.destroy', $category))
+            ->assertSessionHas('error', CategoryDeletionException::hasProducts()->getMessage());
+
+        $this->assertModelExists($category);
+        $this->assertModelExists($product);
+    }
+
+    public function test_soft_deleted_product_still_blocks_category_deletion(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $category = Category::factory()->create();
+        $product = Product::factory()->for($category)->create();
+        $product->delete();
+
+        $this->actingAs($admin)
+            ->delete(route('admin.categories.destroy', $category))
+            ->assertSessionHas('error', CategoryDeletionException::hasProducts()->getMessage());
+
+        $this->assertModelExists($category);
+        $this->assertSoftDeleted($product);
+        $this->assertNotNull(Product::withTrashed()->find($product->getKey()));
     }
 
     public function test_leaf_subcategory_can_be_deleted_without_modifying_its_parent(): void

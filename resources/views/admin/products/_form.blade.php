@@ -96,6 +96,60 @@
     @enderror
 </div>
 
+<fieldset class="mb-4">
+    <legend class="h6">Imagen principal</legend>
+
+    @if ($product?->image)
+        @if ($imageUrl ?? null)
+            <img
+                class="img-fluid img-thumbnail object-fit-cover mb-3"
+                src="{{ $imageUrl }}"
+                alt="Imagen principal de {{ $product->name }}"
+                width="320"
+                height="240"
+            >
+        @else
+            <div class="alert alert-warning" role="status">
+                La imagen registrada no está disponible. Puedes reemplazarla o retirar su referencia.
+            </div>
+        @endif
+
+        <div class="form-check mb-3">
+            <input type="hidden" name="remove_image" value="0">
+            <input
+                class="form-check-input @error('remove_image') is-invalid @enderror"
+                id="remove_image"
+                name="remove_image"
+                type="checkbox"
+                value="1"
+                @checked((bool) old('remove_image'))
+                aria-describedby="remove-image-help @error('remove_image') remove-image-error @enderror"
+            >
+            <label class="form-check-label" for="remove_image">Retirar la imagen actual</label>
+            <div class="form-text" id="remove-image-help">Si seleccionas una imagen nueva, la nueva imagen tendrá prioridad.</div>
+            @error('remove_image')
+                <div class="invalid-feedback" id="remove-image-error">{{ $message }}</div>
+            @enderror
+        </div>
+    @else
+        <p class="text-body-secondary" role="status">Sin imagen.</p>
+    @endif
+
+    <label class="form-label" for="image">Seleccionar imagen <span class="text-body-secondary">(opcional)</span></label>
+    <input
+        class="form-control @error('image') is-invalid @enderror"
+        id="image"
+        name="image"
+        type="file"
+        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+        aria-describedby="image-help @error('image') image-error @enderror"
+    >
+    <div class="form-text" id="image-help">Formatos permitidos: JPG, JPEG, PNG y WEBP. Tamaño máximo: 2 MB.</div>
+    @error('image')
+        <div class="invalid-feedback" id="image-error">{{ $message }}</div>
+    @enderror
+</fieldset>
+
 <div class="form-check mb-4">
     <input type="hidden" name="is_active" value="0">
     <input

@@ -21,6 +21,7 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead>
                             <tr>
+                                <th scope="col">Imagen</th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">SKU</th>
                                 <th scope="col">Categoría</th>
@@ -32,6 +33,22 @@
                         <tbody>
                             @foreach ($products as $product)
                                 <tr>
+                                    <td>
+                                        @if ($imageUrls->get($product->getKey()))
+                                            <img
+                                                class="img-thumbnail object-fit-cover"
+                                                src="{{ $imageUrls->get($product->getKey()) }}"
+                                                alt="Imagen principal de {{ $product->name }}"
+                                                width="72"
+                                                height="72"
+                                                loading="lazy"
+                                            >
+                                        @elseif ($product->image)
+                                            <span class="text-body-secondary">Imagen no disponible</span>
+                                        @else
+                                            <span class="text-body-secondary">Sin imagen</span>
+                                        @endif
+                                    </td>
                                     <th scope="row">{{ $product->name }}</th>
                                     <td><code>{{ $product->sku }}</code></td>
                                     <td>{{ $product->category->name }}</td>

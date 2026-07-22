@@ -18,7 +18,7 @@
                 @if ($imageUrl)
                     <img
                         class="img-fluid img-thumbnail object-fit-contain"
-                        src="{{ $imageUrl }}"
+                        src="{{ asset('storage/'.$product->image) }}"
                         alt="Imagen principal de {{ $product->name }}"
                         width="640"
                         height="480"

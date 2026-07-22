@@ -103,7 +103,7 @@
         @if ($imageUrl ?? null)
             <img
                 class="img-fluid img-thumbnail object-fit-cover mb-3"
-                src="{{ $imageUrl }}"
+                src="{{ asset('storage/'.$product->image) }}"
                 alt="Imagen principal de {{ $product->name }}"
                 width="320"
                 height="240"

@@ -11,6 +11,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use RuntimeException;
 use Tests\TestCase;
@@ -167,7 +168,11 @@ class ProductImageTest extends TestCase
             'name' => 'Producto con imagen',
             'image' => $path,
         ]);
-        $url = Storage::disk('public')->url($path);
+        $url = asset('storage/'.$path);
+
+        $this->assertStringContainsString('/storage/products/', $url);
+        $this->assertStringNotContainsString('/storage/public/products/', $url);
+        $this->assertStringNotContainsString('C:\\', $url);
 
         $this->actingAs($admin)
             ->get(route('admin.products.show', $product))
@@ -179,6 +184,48 @@ class ProductImageTest extends TestCase
             ->assertOk()
             ->assertSee('src="'.$url.'"', false)
             ->assertSee('alt="Imagen principal de Producto con imagen"', false);
+
+        $this->get(route('admin.products.edit', $product))
+            ->assertOk()
+            ->assertSee('src="'.$url.'"', false)
+            ->assertSee('alt="Imagen principal de Producto con imagen"', false);
+    }
+
+    public function test_image_urls_preserve_the_application_subdirectory(): void
+    {
+        Storage::fake('public');
+        $admin = User::factory()->admin()->create();
+        $path = 'products/subdirectory.jpg';
+        Storage::disk('public')->put($path, 'image bytes');
+        $product = Product::factory()->create(['image' => $path]);
+        $applicationUrl = 'http://localhost/warehouse/public';
+        $expectedUrl = $applicationUrl.'/storage/'.$path;
+
+        URL::forceRootUrl($applicationUrl);
+        $this->withServerVariables([
+            'HTTP_HOST' => 'localhost',
+            'PHP_SELF' => '/warehouse/public/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+            'SCRIPT_NAME' => '/warehouse/public/index.php',
+        ]);
+
+        try {
+            $this->actingAs($admin)
+                ->get('/admin/products')
+                ->assertOk()
+                ->assertSee('src="'.$expectedUrl.'"', false);
+
+            $this->get('/admin/products/'.$product->getKey())
+                ->assertOk()
+                ->assertSee('src="'.$expectedUrl.'"', false);
+
+            $this->get('/admin/products/'.$product->getKey().'/edit')
+                ->assertOk()
+                ->assertSee('src="'.$expectedUrl.'"', false);
+        } finally {
+            URL::forceRootUrl(null);
+            $this->withServerVariables([]);
+        }
     }
 
     public function test_list_displays_distinct_empty_and_missing_image_states(): void
@@ -193,7 +240,7 @@ class ProductImageTest extends TestCase
             ->assertOk()
             ->assertSee('Sin imagen')
             ->assertSee('Imagen no disponible')
-            ->assertDontSee('src="'.Storage::disk('public')->url('products/missing.jpg').'"', false);
+            ->assertDontSee('src="'.asset('storage/products/missing.jpg').'"', false);
     }
 
     public function test_admin_can_replace_image_after_product_update_succeeds(): void

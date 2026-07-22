@@ -45,6 +45,14 @@
                                         <div class="d-flex flex-wrap justify-content-end gap-2">
                                             <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.categories.show', $category) }}">Ver</a>
                                             <a class="btn btn-sm btn-outline-secondary" href="{{ route('admin.categories.edit', $category) }}">Editar</a>
+                                            <form method="POST" action="{{ route('admin.categories.status', $category) }}" onsubmit="return confirm('¿Confirmas que deseas {{ $category->is_active ? 'desactivar' : 'activar' }} esta categoría?');">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="is_active" value="{{ $category->is_active ? '0' : '1' }}">
+                                                <button class="btn btn-sm {{ $category->is_active ? 'btn-outline-warning' : 'btn-outline-success' }}" type="submit">
+                                                    {{ $category->is_active ? 'Desactivar' : 'Activar' }}
+                                                </button>
+                                            </form>
                                             <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('¿Confirmas que deseas eliminar esta categoría?');">
                                                 @csrf
                                                 @method('DELETE')

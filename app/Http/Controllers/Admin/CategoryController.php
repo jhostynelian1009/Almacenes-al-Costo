@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreCategoryRequest;
 use App\Http\Requests\Admin\UpdateCategoryRequest;
+use App\Http\Requests\Admin\UpdateCategoryStatusRequest;
 use App\Models\Category;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
@@ -58,6 +59,18 @@ class CategoryController extends Controller
 
         return to_route('admin.categories.show', $category)
             ->with('success', 'Categoría actualizada correctamente.');
+    }
+
+    public function updateStatus(UpdateCategoryStatusRequest $request, Category $category): RedirectResponse
+    {
+        $category->update([
+            'is_active' => $request->validated('is_active'),
+        ]);
+
+        return to_route('admin.categories.index')
+            ->with('success', $category->is_active
+                ? 'Categoría activada correctamente.'
+                : 'Categoría desactivada correctamente.');
     }
 
     public function destroy(Category $category): RedirectResponse

@@ -174,7 +174,7 @@ class CategoryCrudTest extends TestCase
             ->assertDontSee('icon-name');
     }
 
-    public function test_update_regenerates_slug_when_name_changes_and_preserves_non_editable_fields(): void
+    public function test_update_regenerates_slug_and_preserves_fields_outside_the_general_form(): void
     {
         $admin = User::factory()->admin()->create();
         $parent = Category::factory()->create();
@@ -205,7 +205,7 @@ class CategoryCrudTest extends TestCase
         $this->assertSame($parent->getKey(), $category->parent_id);
         $this->assertSame('categories/original.jpg', $category->image);
         $this->assertSame('original-icon', $category->icon);
-        $this->assertSame(12, $category->display_order);
+        $this->assertSame(99, $category->display_order);
         $this->assertFalse($category->is_active);
     }
 
@@ -274,6 +274,7 @@ class CategoryCrudTest extends TestCase
             'admin.categories.edit',
             'admin.categories.update',
             'admin.categories.destroy',
+            'admin.categories.status',
         ];
 
         $actualRoutes = collect(Route::getRoutes()->getRoutesByName())

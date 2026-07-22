@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -39,6 +40,7 @@ Route::middleware(['auth', 'active', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::resource('products', ProductController::class);
         Route::get('categories/tree', [CategoryController::class, 'tree'])
             ->name('categories.tree');
         Route::patch('categories/{category}/status', [CategoryController::class, 'updateStatus'])

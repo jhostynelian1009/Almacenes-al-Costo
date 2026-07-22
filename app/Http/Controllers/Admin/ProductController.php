@@ -12,6 +12,7 @@ use App\Services\ProductImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Throwable;
 
@@ -80,7 +81,9 @@ class ProductController extends Controller
                 $attributes['image'] = $newPath;
             }
 
-            $product = Product::query()->create($attributes);
+            $product = DB::transaction(
+                fn (): Product => Product::query()->create($attributes),
+            );
         } catch (Throwable $exception) {
             $this->cleanupNewImage($imageService, $newPath, $exception);
         }

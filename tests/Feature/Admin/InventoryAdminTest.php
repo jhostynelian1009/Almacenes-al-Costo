@@ -20,10 +20,12 @@ class InventoryAdminTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_inventory_routes_are_exactly_the_four_administrative_routes(): void
+    public function test_inventory_routes_have_the_expected_names(): void
     {
         $expected = [
+            'admin.inventory.alerts' => ['GET', 'HEAD'],
             'admin.inventory.index' => ['GET', 'HEAD'],
+            'admin.inventory.minimum-stock.update' => ['PATCH'],
             'admin.inventory.show' => ['GET', 'HEAD'],
             'admin.inventory.movements.create' => ['GET', 'HEAD'],
             'admin.inventory.movements.store' => ['POST'],
@@ -38,7 +40,7 @@ class InventoryAdminTest extends TestCase
         sort($expectedNames);
 
         $this->assertSame($expectedNames, $actualNames);
-        $this->assertCount(36, Route::getRoutes());
+        $this->assertCount(38, Route::getRoutes());
 
         foreach ($expected as $name => $methods) {
             $route = Route::getRoutes()->getByName($name);

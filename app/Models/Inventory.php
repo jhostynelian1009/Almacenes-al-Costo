@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use DomainException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Inventory extends Model
 {
+    public const STOCK_STATUS_OUT_OF_STOCK = 'out_of_stock';
+
+    public const STOCK_STATUS_LOW = 'low_stock';
+
+    public const STOCK_STATUS_SUFFICIENT = 'sufficient';
+
     public const CREATED_AT = null;
 
     public const UPDATED_AT = 'updated_at';
@@ -59,11 +66,33 @@ class Inventory extends Model
         return $this->hasMany(InventoryMovement::class);
     }
 
+    public function scopeAlerting(Builder $query): Builder
+    {
+        return $query->whereRaw(
+            '(inventories.stock - inventories.reserved_stock) <= inventories.min_stock'
+        );
+    }
+
     protected function availableStock(): Attribute
     {
         return Attribute::get(
             fn (): int => $this->stock - $this->reserved_stock,
         );
+    }
+
+    protected function stockStatus(): Attribute
+    {
+        return Attribute::get(function (): string {
+            if ($this->available_stock === 0) {
+                return self::STOCK_STATUS_OUT_OF_STOCK;
+            }
+
+            if ($this->available_stock <= $this->min_stock) {
+                return self::STOCK_STATUS_LOW;
+            }
+
+            return self::STOCK_STATUS_SUFFICIENT;
+        });
     }
 
     private function validatedQuantity(string $attribute): int

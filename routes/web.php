@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\InventoryAlertController;
 use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\InventoryMinimumStockController;
 use App\Http\Controllers\Admin\InventoryMovementController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -44,8 +46,12 @@ Route::middleware(['auth', 'active', 'admin'])
     ->group(function () {
         Route::get('inventory', [InventoryController::class, 'index'])
             ->name('inventory.index');
+        Route::get('inventory/alerts', [InventoryAlertController::class, 'index'])
+            ->name('inventory.alerts');
         Route::get('inventory/{inventory}', [InventoryController::class, 'show'])
             ->name('inventory.show');
+        Route::patch('inventory/{inventory}/minimum-stock', [InventoryMinimumStockController::class, 'update'])
+            ->name('inventory.minimum-stock.update');
         Route::get('inventory/{inventory}/movements/create', [InventoryMovementController::class, 'create'])
             ->name('inventory.movements.create');
         Route::post('inventory/{inventory}/movements', [InventoryMovementController::class, 'store'])

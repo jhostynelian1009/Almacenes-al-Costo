@@ -27,7 +27,13 @@ Especificar formalmente el listado de requerimientos funcionales requeridos para
 *   **RFA-01 (Dashboard)**: Métricas rápidas (ventas del mes, pedidos validando, alertas de inventario bajo).
 *   **RFA-02 (Productos)**: Lista paginada con buscador, edición rápida y eliminación lógica.
 *   **RFA-03 (Formulario)**: Carga de datos de producto con subida de múltiples fotos de soporte.
-*   **RFA-04 (Categorías)**: Árbol de categorías y subcategorías para la organización del catálogo.
+*   **RFA-04 (Categorías)**: Gestionar un árbol de categorías y subcategorías de múltiples niveles para organizar el catálogo.
+    * Una categoría principal tiene `parent_id = NULL`; una subcategoría referencia opcionalmente a una categoría padre y una categoría puede tener múltiples subcategorías.
+    * `name` y `slug` son únicos. `description`, `image` e `icon` son opcionales.
+    * Una categoría no puede ser su propio padre y la aplicación debe impedir ciclos jerárquicos.
+    * Una categoría inactiva no se muestra en el sitio público.
+    * No se permite eliminar una categoría que tenga subcategorías o productos asociados.
+    * Las categorías públicas se ordenan primero por `display_order` y después por `name`.
 *   **RFA-05 (Inventario)**: Registro de stock físico, umbrales mínimos de alarma e historial de movimientos.
 *   **RFA-06 (Pedidos)**: Tabla de pedidos clasificada por estado (Pendiente, Validando, PAGADO, Aprobado, Cancelado).
 *   **RFA-07 (Detalle Pedido)**: Visualizador de la información de la orden y del pago. Si es manual, mostrar visor del comprobante cargado y botones para aprobar o rechazar con campo de observaciones. Si es pasarela, mostrar ID de transacción, logs de webhooks, monto liquidado y deshabilitar botones de aprobación manual.

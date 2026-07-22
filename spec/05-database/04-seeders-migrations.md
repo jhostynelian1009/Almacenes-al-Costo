@@ -7,8 +7,8 @@ Definir los requerimientos de scripts para la creación automática de tablas y 
 
 ## 2. Plan de Migraciones
 1.  `create_users_table`: Estructura estándar de Laravel con campos adicionales si aplican.
-2.  `create_categories_table`: Id, nombre y slug indexado.
-3.  `create_products_table`: Incluye llave foránea a `categories`.
+2.  `create_categories_table`: Incluye `id`; `name` y `slug` únicos; `description`, `image` e `icon` opcionales; autorrelación nullable mediante `parent_id` con eliminación restringida; `display_order` unsigned con valor predeterminado `0`; `is_active` con valor predeterminado `true`; y timestamps. La migración debe impedir la autorreferencia directa.
+3.  `create_products_table`: Incluye llave foránea a `categories` con eliminación restringida.
 4.  `create_inventories_table`: Incluye llave foránea a `products`.
 5.  `create_orders_table`: Tabla de pedidos.
 6.  `create_order_items_table`: Detalles de pedidos.

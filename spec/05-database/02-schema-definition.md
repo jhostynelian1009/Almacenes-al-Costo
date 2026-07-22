@@ -22,15 +22,25 @@ Especificar la definición física de las tablas de la base de datos MySQL, sus 
 *   `updated_at` TIMESTAMP
 
 ### Tabla: `categories`
-*   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY
-*   `name` VARCHAR(255) NOT NULL
+*   `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY
+*   `name` VARCHAR(255) UNIQUE NOT NULL — **ÍNDICE ÚNICO**
 *   `slug` VARCHAR(255) UNIQUE NOT NULL — **ÍNDICE ÚNICO**
+*   `description` TEXT NULL
+*   `image` VARCHAR(255) NULL
+*   `icon` VARCHAR(255) NULL
+*   `parent_id` BIGINT UNSIGNED NULL (`foreignId` nullable) FOREIGN KEY REFERENCES `categories(id)` ON DELETE RESTRICT
+*   `display_order` INT UNSIGNED NOT NULL DEFAULT 0
+*   `is_active` BOOLEAN NOT NULL DEFAULT TRUE
 *   `created_at` TIMESTAMP
 *   `updated_at` TIMESTAMP
+*   **ÍNDICE**: `INDEX idx_categories_parent_id (parent_id)`
+*   **RESTRICCIÓN**: `CHECK (parent_id IS NULL OR parent_id <> id)`
+
+Una categoría con `parent_id = NULL` es principal. La autorrelación permite múltiples niveles mediante una categoría padre y múltiples subcategorías. La aplicación debe impedir ciclos jerárquicos, excluir categorías inactivas del sitio público y ordenar las categorías públicas por `display_order` ascendente y luego por `name` ascendente. No se permite eliminar una categoría con subcategorías o productos asociados; las llaves foráneas usan `ON DELETE RESTRICT` como respaldo de integridad.
 
 ### Tabla: `products`
 *   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY
-*   `category_id` INT UNSIGNED NOT NULL FOREIGN KEY REFERENCES `categories(id)`
+*   `category_id` BIGINT UNSIGNED NOT NULL FOREIGN KEY REFERENCES `categories(id)` ON DELETE RESTRICT
 *   `name` VARCHAR(255) NOT NULL
 *   `sku` VARCHAR(50) UNIQUE NOT NULL — **ÍNDICE ÚNICO**
 *   `description` TEXT NULL

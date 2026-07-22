@@ -2,7 +2,7 @@
     $items = [
         ['label' => 'Productos'],
         ['label' => 'Categorías', 'route' => 'admin.categories.index', 'active' => 'admin.categories.*'],
-        ['label' => 'Inventario'],
+        ['label' => 'Inventario', 'route' => 'admin.inventory.index', 'active' => 'admin.inventory.*'],
         ['label' => 'Pedidos'],
         ['label' => 'Clientes'],
         ['label' => 'Comprobantes'],

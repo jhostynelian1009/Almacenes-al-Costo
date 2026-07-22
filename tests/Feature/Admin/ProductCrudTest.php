@@ -89,7 +89,6 @@ class ProductCrudTest extends TestCase
             'description' => '  Descripción del producto  ',
             'price' => '25.40',
             'is_active' => '0',
-            'image' => 'products/forbidden.jpg',
             'deleted_at' => now(),
         ]);
 
@@ -176,8 +175,8 @@ class ProductCrudTest extends TestCase
             ->assertSee('value="15.25"', false)
             ->assertSee('name="category_id"', false)
             ->assertSee('name="is_active"', false)
-            ->assertDontSee('name="image"', false)
-            ->assertDontSee('type="file"', false)
+            ->assertSee('name="image"', false)
+            ->assertSee('type="file"', false)
             ->assertDontSee('name="deleted_at"', false);
     }
 
@@ -245,7 +244,6 @@ class ProductCrudTest extends TestCase
             'description' => '',
             'price' => '99.90',
             'is_active' => '0',
-            'image' => 'products/changed.jpg',
         ]);
 
         $response->assertRedirect(route('admin.products.show', $product))

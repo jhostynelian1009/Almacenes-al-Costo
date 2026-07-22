@@ -13,6 +13,25 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
+            <section class="mb-4" aria-labelledby="product-image-heading">
+                <h2 class="h5" id="product-image-heading">Imagen principal</h2>
+                @if ($imageUrl)
+                    <img
+                        class="img-fluid img-thumbnail object-fit-contain"
+                        src="{{ $imageUrl }}"
+                        alt="Imagen principal de {{ $product->name }}"
+                        width="640"
+                        height="480"
+                    >
+                @elseif ($product->image)
+                    <div class="alert alert-warning mb-0" role="status">
+                        La imagen registrada no está disponible.
+                    </div>
+                @else
+                    <p class="text-body-secondary mb-0" role="status">Sin imagen.</p>
+                @endif
+            </section>
+
             <dl class="row mb-0">
                 <dt class="col-sm-4 col-lg-3">Nombre</dt>
                 <dd class="col-sm-8 col-lg-9">{{ $product->name }}</dd>

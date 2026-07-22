@@ -11,7 +11,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.products.store') }}">
+            <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
                 @csrf
                 @include('admin.products._form', ['product' => null])
 

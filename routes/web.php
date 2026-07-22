@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -30,3 +31,10 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 Route::view('/admin', 'admin.dashboard')
     ->middleware(['auth', 'active'])
     ->name('admin.dashboard');
+
+Route::middleware(['auth', 'active', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::resource('categories', CategoryController::class);
+    });

@@ -1,0 +1,63 @@
+@extends('layouts.admin')
+
+@section('title', 'Categorías')
+@php($breadcrumbs = [['label' => 'Categorías']])
+
+@section('content')
+    <x-shared.page-header title="Categorías" subtitle="Administra las categorías y sus relaciones jerárquicas.">
+        <a class="btn btn-primary" href="{{ route('admin.categories.create') }}">Crear categoría</a>
+    </x-shared.page-header>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            @if ($categories->isEmpty())
+                <div class="p-4 text-center" role="status">
+                    <h2 class="h5">No hay categorías registradas</h2>
+                    <p class="text-body-secondary mb-3">Crea la primera categoría para comenzar a organizar los productos.</p>
+                    <a class="btn btn-primary" href="{{ route('admin.categories.create') }}">Crear categoría</a>
+                </div>
+            @else
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Slug</th>
+                                <th scope="col">Categoría padre</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Orden</th>
+                                <th scope="col" class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($categories as $category)
+                                <tr>
+                                    <th scope="row">{{ $category->name }}</th>
+                                    <td><code>{{ $category->slug }}</code></td>
+                                    <td>{{ $category->parent?->name ?? 'Principal' }}</td>
+                                    <td>
+                                        <span class="badge {{ $category->is_active ? 'text-bg-success' : 'text-bg-secondary' }}">
+                                            {{ $category->is_active ? 'Activa' : 'Inactiva' }}
+                                        </span>
+                                    </td>
+                                    <td>{{ $category->display_order }}</td>
+                                    <td>
+                                        <div class="d-flex flex-wrap justify-content-end gap-2">
+                                            <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.categories.show', $category) }}">Ver</a>
+                                            <a class="btn btn-sm btn-outline-secondary" href="{{ route('admin.categories.edit', $category) }}">Editar</a>
+                                            <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('¿Confirmas que deseas eliminar esta categoría?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+    </div>
+@endsection

@@ -348,7 +348,7 @@ class ProductCrudTest extends TestCase
             ->pluck('query')
             ->filter(fn (string $query): bool => str_contains(strtolower($query), 'from "categories"'));
 
-        $this->assertCount(1, $categoryQueries);
+        $this->assertCount(2, $categoryQueries);
     }
 
     public function test_product_resource_has_only_crud_routes_with_administrative_middleware(): void

@@ -23,15 +23,6 @@ class PublicPageController extends Controller
         );
     }
 
-    public function categories(): View
-    {
-        return $this->section(
-            title: 'Categorías',
-            description: 'Consulta el acceso inicial a las categorías de Almacenes al Costo.',
-            message: 'Las categorías se publicarán cuando el catálogo dinámico esté disponible.',
-        );
-    }
-
     public function promotions(): View
     {
         return $this->section(

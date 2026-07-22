@@ -332,7 +332,7 @@ class InventoryFoundationTest extends TestCase
         $this->assertCount(32, Route::getRoutes());
         $this->assertFalse(Route::has('admin.inventories.index'));
         $this->assertFalse(Route::has('admin.inventories.store'));
-        $this->assertFalse(Schema::hasTable('inventory_movements'));
+        $this->assertTrue(Schema::hasTable('inventory_movements'));
         $this->assertFalse(Schema::hasTable('stock_movements'));
     }
 

@@ -37,7 +37,7 @@
                                         @if ($imageUrls->get($product->getKey()))
                                             <img
                                                 class="img-thumbnail object-fit-cover"
-                                                src="{{ $imageUrls->get($product->getKey()) }}"
+                                                src="{{ asset('storage/'.$product->image) }}"
                                                 alt="Imagen principal de {{ $product->name }}"
                                                 width="72"
                                                 height="72"

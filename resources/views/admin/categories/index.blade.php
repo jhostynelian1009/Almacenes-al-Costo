@@ -5,7 +5,10 @@
 
 @section('content')
     <x-shared.page-header title="Categorías" subtitle="Administra las categorías y sus relaciones jerárquicas.">
-        <a class="btn btn-primary" href="{{ route('admin.categories.create') }}">Crear categoría</a>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-primary" href="{{ route('admin.categories.tree') }}">Vista de árbol</a>
+            <a class="btn btn-primary" href="{{ route('admin.categories.create') }}">Crear categoría</a>
+        </div>
     </x-shared.page-header>
 
     <div class="card shadow-sm mb-4">

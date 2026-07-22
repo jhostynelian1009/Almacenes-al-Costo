@@ -59,6 +59,18 @@ class CategoryController extends Controller
         ]);
     }
 
+    public function tree(): View
+    {
+        $categories = Category::query()->ordered()->get();
+
+        return view('admin.categories.tree', [
+            'rootCategories' => $categories->whereNull('parent_id')->values(),
+            'categoriesByParent' => $categories
+                ->groupBy(fn (Category $category): string => (string) $category->parent_id),
+            'maxDepth' => max($categories->count(), 1),
+        ]);
+    }
+
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
         $category = Category::query()->create($request->validated());
@@ -76,10 +88,12 @@ class CategoryController extends Controller
 
     public function edit(Category $category): View
     {
+        $invalidParentIds = [$category->getKey(), ...$category->descendantIds()];
+
         return view('admin.categories.edit', [
             'category' => $category,
             'parentCategories' => Category::query()
-                ->whereKeyNot($category->getKey())
+                ->whereNotIn('id', $invalidParentIds)
                 ->ordered()
                 ->get(),
         ]);

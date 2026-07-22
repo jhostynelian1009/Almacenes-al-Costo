@@ -281,6 +281,7 @@ class CategorySearchFilterTest extends TestCase
             'admin.categories.show',
             'admin.categories.status',
             'admin.categories.store',
+            'admin.categories.tree',
             'admin.categories.update',
         ];
 

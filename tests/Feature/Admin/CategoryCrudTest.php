@@ -275,6 +275,7 @@ class CategoryCrudTest extends TestCase
             'admin.categories.update',
             'admin.categories.destroy',
             'admin.categories.status',
+            'admin.categories.tree',
         ];
 
         $actualRoutes = collect(Route::getRoutes()->getRoutesByName())

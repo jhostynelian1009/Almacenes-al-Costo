@@ -111,6 +111,59 @@ class WebhookLog extends Model
 ```
 
 
+### Modelo: `Category`
+```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Category extends Model
+{
+    protected $fillable = [
+        'name', 'slug', 'description', 'image', 'icon',
+        'parent_id', 'display_order', 'is_active',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'display_order' => 'integer',
+            'is_active' => 'boolean',
+        ];
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('display_order')->orderBy('name');
+    }
+}
+```
+
+Una categoría principal tiene `parent_id = NULL`; `parent` y `children` permiten recorrer una jerarquía de múltiples niveles. La capa de aplicación debe impedir que una categoría sea su propio padre, prevenir ciclos y rechazar la eliminación cuando existan subcategorías o productos asociados. El sitio público combina los scopes `active` y `ordered`.
+
 ### Modelo: `Product`
 ```php
 namespace App\Models;

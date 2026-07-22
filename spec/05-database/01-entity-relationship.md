@@ -14,6 +14,7 @@ Definir gráficamente las entidades principales del sistema y sus relaciones par
 ```mermaid
 erDiagram
     USERS ||--o{ ORDERS : "realiza (opcional)"
+    CATEGORIES o|--o{ CATEGORIES : "padre de"
     CATEGORIES ||--o{ PRODUCTS : "contiene"
     PRODUCTS ||--|| INVENTORIES : "tiene"
     PRODUCTS ||--o{ ORDER_ITEMS : "incluye"
@@ -32,13 +33,21 @@ erDiagram
         timestamp created_at
     }
     CATEGORIES {
-        int id PK
-        string name
+        bigint id PK
+        string name UK
         string slug UK
+        text description "nullable"
+        string image "nullable"
+        string icon "nullable"
+        bigint parent_id FK "nullable"
+        int display_order "unsigned default 0"
+        boolean is_active "default true"
+        timestamp created_at
+        timestamp updated_at
     }
     PRODUCTS {
         int id PK
-        int category_id FK
+        bigint category_id FK
         string name
         string sku UK
         decimal price
@@ -130,12 +139,16 @@ erDiagram
 | Relación | Cardinalidad | Nota |
 | :--- | :--- | :--- |
 | `USERS` → `ORDERS` | 0..N | El usuario es opcional; un cliente invitado tiene `user_id = NULL`. |
+| `CATEGORIES` → `CATEGORIES` | 0..N | Una categoría puede tener cero o una categoría padre y múltiples subcategorías. La autorrelación admite múltiples niveles; la aplicación impide autorreferencias y ciclos. |
+| `CATEGORIES` → `PRODUCTS` | 0..N | Una categoría puede contener múltiples productos. La eliminación se restringe mientras existan productos asociados. |
 | `PRODUCTS` → `INVENTORIES` | 1:1 | Todo producto activo tiene exactamente un registro de inventario. |
 | `ORDERS` → `PAYMENTS` | 1..N | Un pedido puede tener múltiples intentos de pago (reintentos). Solo uno puede tener `status = completed`. |
 | `PAYMENTS` → `PAYMENT_RECEIPTS` | 0..1 | Solo los pagos manuales tienen un comprobante asociado. |
 | `ORDERS` → `PAYMENT_RECEIPTS` | 0..1 | Solo pedidos con método manual tienen comprobante. |
 | `ORDERS` → `ORDER_ITEMS` | 1..N | Un pedido tiene al menos un ítem. Los ítems son snapshots inmutables de producto/precio. |
 | `WEBHOOK_LOGS` | independiente | No tiene FK a `PAYMENTS` por diseño: el log es previo a la verificación y puede fallar antes de resolverse. |
+
+La eliminación de una categoría se restringe cuando tiene subcategorías o productos asociados. Las categorías inactivas se excluyen del sitio público y las categorías públicas se ordenan por `display_order` y luego por `name`.
 
 ---
 

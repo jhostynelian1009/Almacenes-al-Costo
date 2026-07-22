@@ -96,7 +96,13 @@ Definir las responsabilidades, métodos y lógica esperada de cada controlador d
     3.  Actualiza `payment_receipts.rejection_reason`.
     4.  Actualiza `order.status = pending_payment` (el cliente puede re-subir comprobante).
 
-### `Admin\ProductController` / `Admin\CategoryController` / `Admin\InventoryController`
+### `Admin\CategoryController`
+*   Delega la gestión de categorías jerárquicas en la capa de aplicación y valida `name` y `slug` como únicos.
+*   Al crear o actualizar, valida que `parent_id` exista cuando no sea `NULL`, que no apunte a la propia categoría y que la asignación no genere un ciclo entre ancestros y descendientes.
+*   Al eliminar, rechaza la operación cuando la categoría tenga subcategorías o productos asociados. Las llaves foráneas con eliminación restringida respaldan esta regla.
+*   La profundidad de la jerarquía no tiene un límite fijo; cualquier nivel se representa mediante la autorrelación `parent` / `children`.
+
+### `Admin\ProductController` / `Admin\InventoryController`
 *   CRUDs estándar de recursos con paginación, búsqueda y validación de formularios.
 *   `InventoryController` solo expone `index`, `edit` y `update` (no crear/eliminar — el inventario se crea automáticamente con el producto).
 

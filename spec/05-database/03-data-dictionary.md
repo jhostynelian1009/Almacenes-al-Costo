@@ -7,6 +7,23 @@ Describir detalladamente el propósito, tipo y restricciones de cada columna de 
 
 ## 2. Diccionario de Datos de Tablas Clave
 
+### Tabla: `categories`
+| Campo | Tipo | Nulo | Llave | Predeterminado | Descripción |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `id` | BIGINT UNSIGNED | NO | PK | | Identificador único autoincremental de la categoría |
+| `name` | VARCHAR(255) | NO | UNI | | Nombre único de la categoría |
+| `slug` | VARCHAR(255) | NO | UNI | | Identificador único legible para URLs |
+| `description` | TEXT | SI | | NULL | Descripción opcional de la categoría |
+| `image` | VARCHAR(255) | SI | | NULL | Ruta opcional de la imagen asociada |
+| `icon` | VARCHAR(255) | SI | | NULL | Referencia opcional del icono asociado |
+| `parent_id` | BIGINT UNSIGNED | SI | FK | NULL | Categoría padre; `NULL` identifica una categoría principal |
+| `display_order` | INT UNSIGNED | NO | | 0 | Orden de presentación ascendente |
+| `is_active` | BOOLEAN | NO | | true | Determina si la categoría puede mostrarse en el sitio público |
+| `created_at` | TIMESTAMP | SI | | NULL | Fecha de creación |
+| `updated_at` | TIMESTAMP | SI | | NULL | Fecha de última actualización |
+
+`parent_id` referencia `categories.id` con eliminación restringida y permite jerarquías de múltiples niveles. No puede coincidir con el propio `id`; la aplicación debe impedir ciclos. Una categoría no puede eliminarse mientras tenga subcategorías o productos asociados. Las consultas públicas incluyen únicamente categorías activas y se ordenan por `display_order` y después por `name`.
+
 ### Tabla: `orders`
 | Campo | Tipo | Nulo | Llave | Predeterminado | Descripción |
 | :--- | :--- | :--- | :--- | :--- | :--- |

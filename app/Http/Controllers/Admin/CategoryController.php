@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\CategoryDeletionException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\IndexCategoryRequest;
 use App\Http\Requests\Admin\StoreCategoryRequest;
 use App\Http\Requests\Admin\UpdateCategoryRequest;
 use App\Http\Requests\Admin\UpdateCategoryStatusRequest;
 use App\Models\Category;
-use Illuminate\Database\QueryException;
+use App\Services\CategoryDeletionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -119,18 +120,13 @@ class CategoryController extends Controller
                 : 'Categoría desactivada correctamente.');
     }
 
-    public function destroy(Category $category): RedirectResponse
+    public function destroy(Category $category, CategoryDeletionService $deletionService): RedirectResponse
     {
-        if ($category->children()->exists()) {
-            return to_route('admin.categories.index')
-                ->with('error', 'No se puede eliminar la categoría porque tiene subcategorías asociadas.');
-        }
-
         try {
-            $category->delete();
-        } catch (QueryException) {
+            $deletionService->delete($category);
+        } catch (CategoryDeletionException $exception) {
             return to_route('admin.categories.index')
-                ->with('error', 'No se puede eliminar la categoría porque tiene relaciones asociadas.');
+                ->with('error', $exception->getMessage());
         }
 
         return to_route('admin.categories.index')

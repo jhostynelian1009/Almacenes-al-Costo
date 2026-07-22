@@ -112,10 +112,10 @@
                                                     {{ $category->is_active ? 'Desactivar' : 'Activar' }}
                                                 </button>
                                             </form>
-                                            <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('¿Confirmas que deseas eliminar esta categoría?');">
+                                            <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('La eliminación es permanente. ¿Confirmas que deseas eliminar esta categoría?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button>
+                                                <button class="btn btn-sm btn-outline-danger" type="submit" aria-label="Eliminar {{ $category->name }} de forma permanente">Eliminar</button>
                                             </form>
                                         </div>
                                     </td>

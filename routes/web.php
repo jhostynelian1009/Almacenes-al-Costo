@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\InventoryMovementController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -40,6 +42,14 @@ Route::middleware(['auth', 'active', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::get('inventory', [InventoryController::class, 'index'])
+            ->name('inventory.index');
+        Route::get('inventory/{inventory}', [InventoryController::class, 'show'])
+            ->name('inventory.show');
+        Route::get('inventory/{inventory}/movements/create', [InventoryMovementController::class, 'create'])
+            ->name('inventory.movements.create');
+        Route::post('inventory/{inventory}/movements', [InventoryMovementController::class, 'store'])
+            ->name('inventory.movements.store');
         Route::resource('products', ProductController::class);
         Route::get('categories/tree', [CategoryController::class, 'tree'])
             ->name('categories.tree');

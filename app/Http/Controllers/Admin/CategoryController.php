@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\IndexCategoryRequest;
 use App\Http\Requests\Admin\StoreCategoryRequest;
 use App\Http\Requests\Admin\UpdateCategoryRequest;
 use App\Http\Requests\Admin\UpdateCategoryStatusRequest;
@@ -13,11 +14,42 @@ use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    public function index(): View
+    public function index(IndexCategoryRequest $request): View
     {
-        $categories = Category::query()->with('parent')->ordered()->get();
+        $filters = $request->validated();
+        $query = Category::query()->with('parent');
 
-        return view('admin.categories.index', compact('categories'));
+        if (($search = $filters['search'] ?? null) !== null) {
+            $escapedSearch = addcslashes($search, '\\%_');
+            $query->where('name', 'like', "%{$escapedSearch}%");
+        }
+
+        if ($status = $filters['status'] ?? null) {
+            $query->where('is_active', $status === 'active');
+        }
+
+        if ($parentId = $filters['parent_id'] ?? null) {
+            $query->where('parent_id', $parentId);
+        }
+
+        if (($filters['level'] ?? null) === 'main') {
+            $query->whereNull('parent_id');
+        } elseif (($filters['level'] ?? null) === 'child') {
+            $query->whereNotNull('parent_id');
+        }
+
+        $categories = $query->ordered()->paginate(15)->withQueryString();
+        $parentCategories = Category::query()->ordered()->get(['id', 'name']);
+
+        return view('admin.categories.index', [
+            'categories' => $categories,
+            'parentCategories' => $parentCategories,
+            'filters' => $filters,
+            'hasCategories' => $parentCategories->isNotEmpty(),
+            'hasActiveFilters' => collect($filters)
+                ->except('page')
+                ->contains(fn (mixed $value): bool => $value !== null && $value !== ''),
+        ]);
     }
 
     public function create(): View

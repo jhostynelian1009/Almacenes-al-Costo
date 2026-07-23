@@ -31,8 +31,8 @@ class PublicSiteTest extends TestCase
         $this->get(route('home'))
             ->assertOk()
             ->assertViewIs('public.home')
-            ->assertViewHas('featuredBanners', fn ($banners) => $banners->isEmpty())
-            ->assertViewHas('featuredProducts', fn ($products) => $products->isEmpty())
+            ->assertViewHas('featuredBanners', fn ($banners) => $banners->isNotEmpty())
+            ->assertViewHas('featuredProducts')
             ->assertSee('aria-label="Navegación principal"', false)
             ->assertSee('id="main-content"', false)
             ->assertSee('Almacenes al Costo')
@@ -54,8 +54,7 @@ class PublicSiteTest extends TestCase
     {
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('data-empty-state="featured-banners"', false)
-            ->assertSee('Banners destacados aún no disponibles')
+            ->assertSee('Precios al costo en todo el catálogo')
             ->assertSee('data-empty-state="featured-products"', false)
             ->assertSee('No hay productos destacados disponibles');
     }
@@ -90,12 +89,13 @@ class PublicSiteTest extends TestCase
         $this->assertStringNotContainsString('data-bs-ride=', $carousel);
 
         $productCard = Blade::render(
-            '<x-public.product-card name="Elemento de catálogo" image-url="/images/example.webp" image-alt="Descripción alternativa del producto" />'
+            '<x-public.product-card name="Elemento de catálogo" image-url="/images/example.webp" image-alt="Descripción alternativa del producto" detail-url="/product/ejemplo" url="/product/ejemplo" />'
         );
 
         $this->assertStringContainsString('class="card-img-top img-fluid product-card__image"', $productCard);
         $this->assertStringContainsString('alt="Descripción alternativa del producto"', $productCard);
         $this->assertStringContainsString('loading="lazy"', $productCard);
+        $this->assertStringContainsString('href="/product/ejemplo"', $productCard);
     }
 
     public function test_home_calls_to_action_target_the_existing_catalog_route(): void
@@ -191,5 +191,7 @@ class PublicSiteTest extends TestCase
         foreach (['catalog.search', 'products.show', 'cart.index', 'checkout.index'] as $routeName) {
             $this->assertFalse(Route::has($routeName));
         }
+
+        $this->assertTrue(Route::has('catalog.show'));
     }
 }

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="bannerCatalogoTitle">
+    <title id="bannerCatalogoTitle">Promoción del catálogo de Almacenes al Costo</title>
+    <defs>
+        <linearGradient id="catalogGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0d6efd"/>
+            <stop offset="100%" stop-color="#084298"/>
+        </linearGradient>
+    </defs>
+    <rect width="1200" height="560" fill="url(#catalogGradient)"/>
+    <circle cx="980" cy="120" r="120" fill="#ffffff" fill-opacity="0.12"/>
+    <circle cx="1080" cy="420" r="180" fill="#ffffff" fill-opacity="0.08"/>
+    <text x="80" y="250" fill="#ffffff" font-family="Arial, sans-serif" font-size="64" font-weight="700">Precios al costo</text>
+    <text x="80" y="330" fill="#dbeafe" font-family="Arial, sans-serif" font-size="34">Explora el catálogo disponible</text>
+</svg>

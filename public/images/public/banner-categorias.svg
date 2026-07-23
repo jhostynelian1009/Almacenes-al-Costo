@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="bannerCategoriasTitle">
+    <title id="bannerCategoriasTitle">Promoción de categorías de Almacenes al Costo</title>
+    <defs>
+        <linearGradient id="categoriesGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#198754"/>
+            <stop offset="100%" stop-color="#0f5132"/>
+        </linearGradient>
+    </defs>
+    <rect width="1200" height="560" fill="url(#categoriesGradient)"/>
+    <circle cx="180" cy="420" r="150" fill="#ffffff" fill-opacity="0.1"/>
+    <circle cx="1020" cy="160" r="140" fill="#ffffff" fill-opacity="0.08"/>
+    <text x="80" y="250" fill="#ffffff" font-family="Arial, sans-serif" font-size="58" font-weight="700">Compra por categoría</text>
+    <text x="80" y="330" fill="#d1e7dd" font-family="Arial, sans-serif" font-size="34">Encuentra lo que necesitas más rápido</text>
+</svg>

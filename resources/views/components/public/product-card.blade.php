@@ -4,15 +4,32 @@
     'imageAlt' => null,
     'price' => null,
     'url' => null,
+    'detailUrl' => null,
     'description' => null,
     'category' => null,
     'availability' => null,
+    'productSlug' => null,
     'headingLevel' => 3,
 ])
 
+@php
+    $productDetailUrl = $detailUrl ?: $url;
+@endphp
+
 <article {{ $attributes->class(['product-card card h-100']) }}>
     <div class="product-card__media">
-        @if ($imageUrl)
+        @if ($imageUrl && $productDetailUrl)
+            <a class="product-card__media-link d-block" href="{{ $productDetailUrl }}">
+                <img
+                    class="card-img-top img-fluid product-card__image"
+                    src="{{ $imageUrl }}"
+                    alt="{{ $imageAlt ?: $name }}"
+                    width="640"
+                    height="480"
+                    loading="lazy"
+                >
+            </a>
+        @elseif ($imageUrl)
             <img
                 class="card-img-top img-fluid product-card__image"
                 src="{{ $imageUrl }}"
@@ -35,9 +52,21 @@
         @endif
 
         @if ((int) $headingLevel === 2)
-            <h2 class="h5 card-title">{{ $name }}</h2>
+            <h2 class="h5 card-title">
+                @if ($productDetailUrl)
+                    <a class="stretched-link-target link-dark text-decoration-none" href="{{ $productDetailUrl }}">{{ $name }}</a>
+                @else
+                    {{ $name }}
+                @endif
+            </h2>
         @else
-            <h3 class="h5 card-title">{{ $name }}</h3>
+            <h3 class="h5 card-title">
+                @if ($productDetailUrl)
+                    <a class="stretched-link-target link-dark text-decoration-none" href="{{ $productDetailUrl }}">{{ $name }}</a>
+                @else
+                    {{ $name }}
+                @endif
+            </h3>
         @endif
 
         @if ($description)
@@ -58,6 +87,15 @@
 
         @if ($url)
             <a class="btn btn-outline-brand mt-auto align-self-start" href="{{ $url }}">Ver producto</a>
+        @endif
+
+        @if ($productSlug && $availability === 'Disponible')
+            <form class="mt-2 align-self-start" method="POST" action="{{ route('cart.items.store') }}">
+                @csrf
+                <input type="hidden" name="product" value="{{ $productSlug }}">
+                <input type="hidden" name="quantity" value="1">
+                <button class="btn btn-brand" type="submit">Agregar al carrito</button>
+            </form>
         @endif
     </div>
 </article>

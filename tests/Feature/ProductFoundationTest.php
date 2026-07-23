@@ -21,6 +21,7 @@ class ProductFoundationTest extends TestCase
             'id',
             'category_id',
             'name',
+            'slug',
             'sku',
             'description',
             'price',
@@ -43,6 +44,7 @@ class ProductFoundationTest extends TestCase
             'created_at',
             'updated_at',
             'deleted_at',
+            'slug',
         ], Schema::getColumnListing('products'));
     }
 
@@ -53,6 +55,9 @@ class ProductFoundationTest extends TestCase
         $this->assertTrue($indexes->has('products_sku_unique'));
         $this->assertTrue($indexes->get('products_sku_unique')['unique']);
         $this->assertSame(['sku'], $indexes->get('products_sku_unique')['columns']);
+        $this->assertTrue($indexes->has('products_slug_unique'));
+        $this->assertTrue($indexes->get('products_slug_unique')['unique']);
+        $this->assertSame(['slug'], $indexes->get('products_slug_unique')['columns']);
         $this->assertSame(['category_id'], $indexes->get('idx_products_category_id')['columns']);
         $this->assertSame(['is_active'], $indexes->get('idx_products_is_active')['columns']);
     }
@@ -73,13 +78,14 @@ class ProductFoundationTest extends TestCase
     public function test_required_product_fields_reject_null_values_at_database_level(): void
     {
         $category = Category::factory()->create();
-        $requiredFields = ['category_id', 'name', 'sku', 'price', 'is_active'];
+        $requiredFields = ['category_id', 'name', 'slug', 'sku', 'price', 'is_active'];
         $rejectedFields = [];
 
         foreach ($requiredFields as $field) {
             $attributes = [
                 'category_id' => $category->getKey(),
                 'name' => 'Required field '.$field,
+                'slug' => 'required-'.str_replace('_', '-', $field),
                 'sku' => 'REQ-'.strtoupper($field),
                 'price' => 10.25,
                 'is_active' => true,

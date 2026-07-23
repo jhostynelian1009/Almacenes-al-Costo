@@ -11,14 +11,17 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicPageController;
+use App\Http\Controllers\PublicProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(PublicPageController::class)->group(function () {
     Route::get('/', 'home')->name('home');
-    Route::get('/catalogo', 'catalog')->name('catalog.index');
     Route::get('/promociones', 'promotions')->name('promotions.index');
     Route::get('/informacion', 'information')->name('information');
 });
+
+Route::get('/catalogo', [PublicProductController::class, 'index'])
+    ->name('catalog.index');
 
 Route::get('/categorias', [PublicCategoryController::class, 'index'])
     ->name('categories.index');

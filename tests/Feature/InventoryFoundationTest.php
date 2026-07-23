@@ -329,7 +329,7 @@ class InventoryFoundationTest extends TestCase
 
     public function test_inventory_foundation_adds_no_routes_or_future_tables(): void
     {
-        $this->assertCount(38, Route::getRoutes());
+        $this->assertCount(39, Route::getRoutes());
         $this->assertFalse(Route::has('admin.inventories.index'));
         $this->assertFalse(Route::has('admin.inventories.store'));
         $this->assertTrue(Schema::hasTable('inventory_movements'));
@@ -345,6 +345,7 @@ class InventoryFoundationTest extends TestCase
         return array_merge([
             'category_id' => $category->getKey(),
             'name' => 'Producto previo al inventario',
+            'slug' => 'raw-'.fake()->unique()->uuid(),
             'sku' => 'RAW-'.fake()->unique()->numerify('########'),
             'description' => null,
             'price' => '10.00',

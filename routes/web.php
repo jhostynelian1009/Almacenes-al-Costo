@@ -23,6 +23,9 @@ Route::controller(PublicPageController::class)->group(function () {
 Route::get('/catalogo', [PublicProductController::class, 'index'])
     ->name('catalog.index');
 
+Route::get('/product/{product:slug}', [PublicProductController::class, 'show'])
+    ->name('catalog.show');
+
 Route::get('/categorias', [PublicCategoryController::class, 'index'])
     ->name('categories.index');
 

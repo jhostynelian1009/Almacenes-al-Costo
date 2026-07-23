@@ -29,7 +29,7 @@ class InventoryAlertTest extends TestCase
         $this->assertSame('admin/inventory/alerts', $alertsRoute->uri());
         $this->assertSame(['PATCH'], $minimumRoute->methods());
         $this->assertSame('admin/inventory/{inventory}/minimum-stock', $minimumRoute->uri());
-        $this->assertCount(38, Route::getRoutes());
+        $this->assertCount(39, Route::getRoutes());
 
         foreach ([$alertsRoute, $minimumRoute] as $route) {
             $this->assertContains('auth', $route->gatherMiddleware());

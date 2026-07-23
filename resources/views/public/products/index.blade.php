@@ -14,9 +14,21 @@
                 </p>
             </header>
 
-            <form class="section-placeholder-card p-3 p-md-4 mb-4" method="GET" action="{{ route('catalog.index') }}" aria-label="Filtrar catálogo por categoría">
-                <div class="row align-items-end g-3">
-                    <div class="col-md-8 col-lg-6">
+            <form class="section-placeholder-card p-3 p-md-4 mb-4" method="GET" action="{{ route('catalog.index') }}" aria-label="Buscar y filtrar catálogo">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-6 col-lg-5">
+                        <label class="form-label fw-semibold" for="catalog-search">Buscar productos</label>
+                        <input
+                            class="form-control"
+                            id="catalog-search"
+                            name="q"
+                            type="search"
+                            value="{{ $searchQuery }}"
+                            maxlength="100"
+                            placeholder="Nombre o descripción"
+                        >
+                    </div>
+                    <div class="col-md-6 col-lg-4">
                         <label class="form-label fw-semibold" for="catalog-category">Categoría</label>
                         <select class="form-select" id="catalog-category" name="category">
                             <option value="">Todas las categorías</option>
@@ -27,10 +39,10 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-auto d-flex flex-wrap gap-2">
-                        <button class="btn btn-brand" type="submit">Aplicar categoría</button>
-                        @if ($selectedCategory)
-                            <a class="btn btn-outline-brand" href="{{ route('catalog.index') }}">Limpiar filtro</a>
+                    <div class="col-lg-3 d-flex flex-wrap gap-2">
+                        <button class="btn btn-brand" type="submit">Buscar</button>
+                        @if ($searchQuery || $selectedCategory)
+                            <a class="btn btn-outline-brand" href="{{ route('catalog.index') }}">Limpiar</a>
                         @endif
                     </div>
                 </div>
@@ -42,14 +54,22 @@
                 </p>
             @endif
 
+            @if ($searchQuery)
+                <p class="mb-4" role="status">
+                    Resultados para: <strong>{{ $searchQuery }}</strong>
+                </p>
+            @endif
+
             @if ($products->isEmpty())
                 <x-public.empty-state
                     class="section-placeholder-card"
                     name="public-products"
                     title="Sin productos disponibles"
-                    :message="$selectedCategory
-                        ? 'No hay productos disponibles en esta categoría.'
-                        : 'No hay productos disponibles en este momento.'"
+                    :message="$searchQuery
+                        ? 'No se encontraron productos para tu búsqueda.'
+                        : ($selectedCategory
+                            ? 'No hay productos disponibles en esta categoría.'
+                            : 'No hay productos disponibles en este momento.')"
                     :heading-level="2"
                 />
             @else
@@ -60,6 +80,7 @@
                                 && Illuminate\Support\Facades\Storage::disk('public')->exists($product->image);
                             $imageUrl = $hasPublicImage ? asset('storage/'.$product->image) : null;
                             $availability = $product->inventory->available_stock > 0 ? 'Disponible' : 'Agotado';
+                            $detailUrl = route('catalog.show', $product->slug);
                         @endphp
                         <div class="col">
                             <x-public.product-card
@@ -70,6 +91,8 @@
                                 :image-alt="$product->name"
                                 :price="'$ '.number_format((float) $product->price, 2, '.', ',')"
                                 :availability="$availability"
+                                :detail-url="$detailUrl"
+                                :url="$detailUrl"
                                 :heading-level="2"
                             />
                         </div>

@@ -92,10 +92,13 @@ class CartTest extends TestCase
         $this->post(route('cart.items.store'), ['product' => $first->slug, 'quantity' => 2]);
         $this->post(route('cart.items.store'), ['product' => $second->slug, 'quantity' => 1]);
 
-        $this->get(route('catalog.index'))
-            ->assertOk()
-            ->assertSee('>3<', false)
-            ->assertSee('productos en el carrito', false);
+        $response = $this->get(route('catalog.index'))
+            ->assertOk();
+
+        $this->assertMatchesRegularExpression(
+            '/<span[^>]*class="[^"]*badge[^"]*"[^>]*>\s*3\s*<span[^>]*class="visually-hidden"[^>]*>\s*productos en el carrito\s*<\/span>\s*<\/span>/i',
+            $response->getContent()
+        );
     }
 
     public function test_invalid_quantities_and_unavailable_products_are_rejected(): void

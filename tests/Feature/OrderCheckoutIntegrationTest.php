@@ -63,11 +63,25 @@ class OrderCheckoutIntegrationTest extends TestCase
 
         $this->get(route('cart.index'))->assertSee('Tu carrito está vacío');
 
-        $this->get(route('orders.confirmation', $order->reference))
+        // Verify the confirmation route uses the public order reference
+        $route = Route::getRoutes()->getByName('orders.confirmation');
+        $this->assertNotNull($route);
+        $this->assertSame('pedido/{orderReference}/confirmacion', $route->uri());
+
+        $response = $this->get(route('orders.confirmation', $order->reference))
             ->assertOk()
             ->assertSee($order->reference)
-            ->assertSee('Pendiente de pago')
-            ->assertDontSee((string) $order->id);
+            ->assertSee('Pendiente de pago');
+
+        // Verify that an internal-ID confirmation URL or link is not rendered
+        $response->assertDontSee('/pedido/'.$order->id.'/confirmacion');
+        $response->assertDontSee('/pedido/'.$order->id);
+        $response->assertDontSee(url('/pedido/'.$order->id.'/confirmacion'));
+        $response->assertDontSee(url('/pedido/'.$order->id));
+
+        // Verify that the internal order ID is not used as the public route identifier (fails with 404)
+        $this->get(route('orders.confirmation', $order->id))
+            ->assertNotFound();
     }
 
     public function test_guest_checkout_leaves_user_id_null(): void

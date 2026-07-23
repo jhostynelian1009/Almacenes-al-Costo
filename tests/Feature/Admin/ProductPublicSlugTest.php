@@ -9,10 +9,8 @@ use App\Services\ProductSlugService;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
-use RuntimeException;
 use Tests\TestCase;
 
 class ProductPublicSlugTest extends TestCase

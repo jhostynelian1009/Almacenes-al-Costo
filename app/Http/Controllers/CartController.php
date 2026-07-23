@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\CartOperationException;
-use App\Exceptions\CheckoutOperationException;
-use App\Http\Requests\CheckoutFormRequest;
 use App\Http\Requests\StoreCartItemRequest;
 use App\Http\Requests\UpdateCartItemRequest;
 use App\Models\Product;
 use App\Services\CartService;
-use App\Services\CheckoutService;
 use App\Services\ProductVisibilityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;

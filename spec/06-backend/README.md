@@ -19,7 +19,7 @@ Esta carpeta contendrá los siguientes documentos de especificación técnica de
 ### [01-routes-map.md](file:///c:/xampp/htdocs/Almacenes-al-Costo/spec/06-backend/01-routes-map.md)
 *   **Propósito**: Definir y organizar las rutas del archivo `routes/web.php` y `routes/api.php`.
 *   **Contenido esperado**:
-    *   *Rutas Públicas del Cliente*: Home (`/`), Catálogo (`/catalog`), Detalle (`/product/{id}`), Carrito (`/cart`), Checkout (`/checkout`), Confirmación (`/order/confirm`), Métodos de Pago (`/order/{id}/payment`), Subida de Comprobante (`/order/{id}/payment/upload`), Estado del Pedido (`/order/{id}/status`).
+    *   *Rutas Públicas del Cliente*: Home (`/`), Catálogo (`/catalog`), Detalle (`/product/{product:slug}`, con URL resultante `/product/{slug}` y binding exclusivo mediante `Product.slug`), Carrito (`/cart`), Checkout (`/checkout`), Confirmación (`/order/confirm`), Métodos de Pago (`/order/{id}/payment`), Subida de Comprobante (`/order/{id}/payment/upload`), Estado del Pedido (`/order/{id}/status`). El detalle público nunca resuelve Product mediante `id` o `sku`.
     *   *Rutas Privadas del Administrador* (agrupadas bajo prefijo `/admin` y middleware `auth`): Dashboard, CRUDs de Productos, Categorías, Inventarios, Pedidos (con aprobación/rechazo), Clientes, Promociones y Configuración.
 
 ### [02-controllers.md](file:///c:/xampp/htdocs/Almacenes-al-Costo/spec/06-backend/02-controllers.md)

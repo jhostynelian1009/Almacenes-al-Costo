@@ -42,6 +42,7 @@ Una categoría con `parent_id = NULL` es principal. La autorrelación permite m�
 *   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY
 *   `category_id` BIGINT UNSIGNED NOT NULL FOREIGN KEY REFERENCES `categories(id)` ON DELETE RESTRICT
 *   `name` VARCHAR(255) NOT NULL
+*   `slug` VARCHAR(255) UNIQUE NOT NULL — **ÍNDICE ÚNICO**
 *   `sku` VARCHAR(50) UNIQUE NOT NULL — **ÍNDICE ÚNICO**
 *   `description` TEXT NULL
 *   `price` DECIMAL(10,2) NOT NULL
@@ -51,6 +52,18 @@ Una categoría con `parent_id = NULL` es principal. La autorrelación permite m�
 *   `updated_at` TIMESTAMP
 *   **ÍNDICE**: `INDEX idx_products_category_id (category_id)`
 *   **ÍNDICE**: `INDEX idx_products_is_active (is_active)`
+
+#### Contrato del identificador público de producto
+
+`products.slug` se utiliza exclusivamente como identificador público persistente y clave de resolución de rutas de Product. No sustituye la clave primaria `id`, no sustituye `sku` y no contiene información sensible. Ni `products.id` ni `products.sku` se exponen en las URLs públicas.
+
+El slug se genera en el servidor al crear el producto a partir de `name`: se eliminan espacios iniciales y finales, se normaliza a minúsculas, se utilizan caracteres compatibles con URLs y las palabras se separan mediante guiones. No puede contener barras, query strings ni fragmentos. Por ejemplo, `Aceite Castrol GTX 20W-50` genera `aceite-castrol-gtx-20w-50`. El alta administrativa no acepta un slug enviado libremente por el formulario.
+
+La unicidad se resuelve conservando el slug base para el primer producto y agregando un sufijo numérico incremental cuando exista una colisión: `aceite-castrol`, `aceite-castrol-2`, `aceite-castrol-3`. La comprobación incluye productos activos, inactivos y eliminados lógicamente; los slugs de productos soft-deleted no se reutilizan automáticamente. La restricción `UNIQUE` de la base de datos constituye la protección final.
+
+El slug es estable: se genera al crear el producto y un cambio posterior de `name` no lo modifica automáticamente. FT-003.4 no incorpora una interfaz administrativa para editarlo. Cualquier edición manual futura, redirección o historial de slugs requerirá un contrato específico posterior.
+
+La implementación deberá incorporar una migración de transición para los productos existentes. Esta añadirá primero `slug` de forma compatible con registros previos, procesará todos los productos —incluidos los soft-deleted— en un orden determinista, generará los valores y resolverá colisiones mediante sufijos incrementales. Solo después aplicará la obligatoriedad y la unicidad contractuales. La transición no eliminará ni modificará `id`, `sku`, `name`, inventario, imágenes, relaciones ni marcas de eliminación lógica. Esta migración no forma parte de la rama documental que define el contrato.
 
 ### Tabla: `inventories`
 *   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY

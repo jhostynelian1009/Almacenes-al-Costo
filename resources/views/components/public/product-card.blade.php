@@ -8,6 +8,7 @@
     'description' => null,
     'category' => null,
     'availability' => null,
+    'productSlug' => null,
     'headingLevel' => 3,
 ])
 
@@ -86,6 +87,15 @@
 
         @if ($url)
             <a class="btn btn-outline-brand mt-auto align-self-start" href="{{ $url }}">Ver producto</a>
+        @endif
+
+        @if ($productSlug && $availability === 'Disponible')
+            <form class="mt-2 align-self-start" method="POST" action="{{ route('cart.items.store') }}">
+                @csrf
+                <input type="hidden" name="product" value="{{ $productSlug }}">
+                <input type="hidden" name="quantity" value="1">
+                <button class="btn btn-brand" type="submit">Agregar al carrito</button>
+            </form>
         @endif
     </div>
 </article>

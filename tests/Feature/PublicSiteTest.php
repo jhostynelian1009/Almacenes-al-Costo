@@ -188,10 +188,12 @@ class PublicSiteTest extends TestCase
 
     public function test_routes_outside_the_public_home_scope_were_not_added(): void
     {
-        foreach (['catalog.search', 'products.show', 'cart.index', 'checkout.index'] as $routeName) {
+        foreach (['catalog.search', 'products.show', 'checkout.index'] as $routeName) {
             $this->assertFalse(Route::has($routeName));
         }
 
         $this->assertTrue(Route::has('catalog.show'));
+        $this->assertTrue(Route::has('cart.index'));
+        $this->assertTrue(Route::has('checkout.create'));
     }
 }

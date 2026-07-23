@@ -91,6 +91,7 @@
                                 :image-alt="$product->name"
                                 :price="'$ '.number_format((float) $product->price, 2, '.', ',')"
                                 :availability="$availability"
+                                :product-slug="$product->slug"
                                 :detail-url="$detailUrl"
                                 :url="$detailUrl"
                                 :heading-level="2"

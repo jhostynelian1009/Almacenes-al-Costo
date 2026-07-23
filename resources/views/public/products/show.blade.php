@@ -54,9 +54,33 @@
                     </header>
 
                     @if (filled($product->description))
-                        <section aria-labelledby="product-description-title">
+                        <section class="mb-4" aria-labelledby="product-description-title">
                             <h2 class="h5 mb-3" id="product-description-title">Descripción</h2>
                             <p class="text-body-secondary mb-0">{{ $product->description }}</p>
+                        </section>
+                    @endif
+
+                    @if ($availability === 'Disponible')
+                        <section aria-labelledby="product-add-to-cart-title">
+                            <h2 class="h5 mb-3" id="product-add-to-cart-title">Agregar al carrito</h2>
+                            <form class="d-flex flex-wrap align-items-end gap-3" method="POST" action="{{ route('cart.items.store') }}">
+                                @csrf
+                                <input type="hidden" name="product" value="{{ $product->slug }}">
+                                <div>
+                                    <label class="form-label" for="product-quantity">Cantidad</label>
+                                    <input
+                                        class="form-control"
+                                        id="product-quantity"
+                                        name="quantity"
+                                        type="number"
+                                        min="1"
+                                        max="{{ $product->inventory->available_stock }}"
+                                        value="1"
+                                        required
+                                    >
+                                </div>
+                                <button class="btn btn-brand" type="submit">Agregar al carrito</button>
+                            </form>
                         </section>
                     @endif
                 </div>

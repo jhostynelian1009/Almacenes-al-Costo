@@ -393,7 +393,7 @@ class InventoryEpicIntegrationTest extends TestCase
         sort($expectedRoutes);
 
         $this->assertSame($expectedRoutes, $actualRoutes);
-        $this->assertCount(39, Route::getRoutes());
+        $this->assertCount(48, Route::getRoutes());
 
         foreach ($expectedRoutes as $name) {
             $route = Route::getRoutes()->getByName($name);
@@ -597,7 +597,7 @@ class InventoryEpicIntegrationTest extends TestCase
 
         $this->assertFalse(Schema::hasTable('alerts'));
         $this->assertFalse(Schema::hasColumn('inventories', 'stock_status'));
-        $this->assertCount(39, Route::getRoutes());
+        $this->assertCount(48, Route::getRoutes());
     }
 
     /**

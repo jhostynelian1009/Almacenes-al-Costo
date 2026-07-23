@@ -74,10 +74,12 @@ class PublicSiteCompletionTest extends TestCase
             ->assertDontSee($product->sku);
     }
 
-    public function test_public_site_route_total_matches_ep003_scope(): void
+    public function test_public_site_route_total_matches_ep004_scope(): void
     {
         $this->assertTrue(Route::has('catalog.show'));
-        $this->assertCount(39, Route::getRoutes());
+        $this->assertTrue(Route::has('cart.index'));
+        $this->assertTrue(Route::has('checkout.create'));
+        $this->assertCount(48, Route::getRoutes());
     }
 
     private function createPublicProduct(

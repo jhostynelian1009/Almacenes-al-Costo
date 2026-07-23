@@ -30,6 +30,17 @@
                     </li>
                 @endforeach
                 <li class="nav-item ms-lg-2">
+                    <a class="btn btn-outline-brand position-relative" href="{{ route('cart.index') }}">
+                        Carrito
+                        @if (($cartUnitCount ?? 0) > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-brand">
+                                {{ $cartUnitCount }}
+                                <span class="visually-hidden">productos en el carrito</span>
+                            </span>
+                        @endif
+                    </a>
+                </li>
+                <li class="nav-item ms-lg-2">
                     <a class="btn btn-outline-brand" href="{{ auth()->check() ? route('admin.dashboard') : route('login') }}">
                         {{ auth()->check() ? 'Panel interno' : 'Acceso interno' }}
                     </a>

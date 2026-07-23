@@ -31,7 +31,7 @@ class PublicProductCatalogTest extends TestCase
         $this->assertNotContains('auth', $route->gatherMiddleware());
         $this->assertNotContains('active', $route->gatherMiddleware());
         $this->assertNotContains('admin', $route->gatherMiddleware());
-        $this->assertCount(39, Route::getRoutes());
+        $this->assertCount(48, Route::getRoutes());
 
         $this->get('/catalogo')
             ->assertOk()
@@ -47,11 +47,12 @@ class PublicProductCatalogTest extends TestCase
 
         $this->assertCount(1, $catalogRoutes);
 
-        foreach (['catalog.search', 'products.index', 'products.show', 'cart.index', 'checkout.index'] as $routeName) {
+        foreach (['catalog.search', 'products.index', 'products.show', 'checkout.index'] as $routeName) {
             $this->assertFalse(Route::has($routeName));
         }
 
         $this->assertTrue(Route::has('catalog.show'));
+        $this->assertTrue(Route::has('cart.index'));
     }
 
     public function test_only_products_from_completely_public_category_branches_are_visible(): void
@@ -332,6 +333,7 @@ class PublicProductCatalogTest extends TestCase
             ->assertSee(route('catalog.show', $product->slug), false)
             ->assertSee('Todos los derechos reservados')
             ->assertDontSee('SKU-INTERNO-555')
+            ->assertSee('Agregar al carrito')
             ->assertDontSee('Comprar')
             ->assertDontSee('Añadir al carrito');
 

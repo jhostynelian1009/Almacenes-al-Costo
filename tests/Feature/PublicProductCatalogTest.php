@@ -31,7 +31,7 @@ class PublicProductCatalogTest extends TestCase
         $this->assertNotContains('auth', $route->gatherMiddleware());
         $this->assertNotContains('active', $route->gatherMiddleware());
         $this->assertNotContains('admin', $route->gatherMiddleware());
-        $this->assertCount(38, Route::getRoutes());
+        $this->assertCount(39, Route::getRoutes());
 
         $this->get('/catalogo')
             ->assertOk()
@@ -50,6 +50,8 @@ class PublicProductCatalogTest extends TestCase
         foreach (['catalog.search', 'products.index', 'products.show', 'cart.index', 'checkout.index'] as $routeName) {
             $this->assertFalse(Route::has($routeName));
         }
+
+        $this->assertTrue(Route::has('catalog.show'));
     }
 
     public function test_only_products_from_completely_public_category_branches_are_visible(): void
@@ -186,6 +188,7 @@ class PublicProductCatalogTest extends TestCase
             ->assertDontSee($otherProduct->name)
             ->assertSee('Categoría seleccionada:')
             ->assertSee('name='.$quote.'category'.$quote, false)
+            ->assertSee('name='.$quote.'q'.$quote, false)
             ->assertSee('value='.$quote.$root->slug.$quote, false)
             ->assertDontSee('name='.$quote.'category_id'.$quote, false)
             ->assertSee('href='.$quote.route('catalog.index').$quote, false);
@@ -326,6 +329,7 @@ class PublicProductCatalogTest extends TestCase
             ->assertSee('$ 1,234.50')
             ->assertSee($category->name)
             ->assertSee('Disponible')
+            ->assertSee(route('catalog.show', $product->slug), false)
             ->assertSee('Todos los derechos reservados')
             ->assertDontSee('SKU-INTERNO-555')
             ->assertDontSee('Comprar')
@@ -333,7 +337,7 @@ class PublicProductCatalogTest extends TestCase
 
         $response->assertDontSee('/admin/products', false);
         $this->assertSame(1, substr_count($response->getContent(), chr(60).'h1'));
-        $this->assertFalse(Route::has('products.show'));
+        $this->assertTrue(Route::has('catalog.show'));
     }
 
     public function test_catalog_uses_bounded_queries_eager_loading_and_database_pagination(): void

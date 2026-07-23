@@ -53,6 +53,8 @@
                                 :image-alt="$product['image_alt'] ?? null"
                                 :price="$product['price'] ?? null"
                                 :url="$product['url'] ?? null"
+                                :detail-url="$product['url'] ?? null"
+                                :availability="$product['availability'] ?? null"
                             />
                         </div>
                     @endforeach

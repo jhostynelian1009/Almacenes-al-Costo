@@ -40,7 +40,7 @@ class InventoryAdminTest extends TestCase
         sort($expectedNames);
 
         $this->assertSame($expectedNames, $actualNames);
-        $this->assertCount(38, Route::getRoutes());
+        $this->assertCount(39, Route::getRoutes());
 
         foreach ($expected as $name => $methods) {
             $route = Route::getRoutes()->getByName($name);

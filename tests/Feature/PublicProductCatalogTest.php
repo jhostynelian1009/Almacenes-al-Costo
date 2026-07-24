@@ -31,7 +31,7 @@ class PublicProductCatalogTest extends TestCase
         $this->assertNotContains('auth', $route->gatherMiddleware());
         $this->assertNotContains('active', $route->gatherMiddleware());
         $this->assertNotContains('admin', $route->gatherMiddleware());
-        $this->assertCount(57, Route::getRoutes());
+        $this->assertCount(59, Route::getRoutes());
 
         $this->get('/catalogo')
             ->assertOk()

@@ -3,7 +3,9 @@
 namespace App\Services\Payments;
 
 use App\Contracts\PaymentGatewayInterface;
+use App\Exceptions\DatafastOperationException;
 use App\Exceptions\PaymentOperationException;
+use App\Payments\DatafastGateway;
 use App\Payments\DeunaGateway;
 use App\Payments\ManualPaymentAdapter;
 
@@ -12,7 +14,7 @@ class PaymentFactory
     /**
      * Supported gateway identifiers.
      */
-    public const SUPPORTED_GATEWAYS = ['manual', 'deuna'];
+    public const SUPPORTED_GATEWAYS = ['manual', 'deuna', 'datafast'];
 
     /**
      * Resolve and return the correct payment adapter for the given gateway identifier.
@@ -24,6 +26,7 @@ class PaymentFactory
         return match ($gateway) {
             'manual', 'transfer' => new ManualPaymentAdapter,
             'deuna' => $this->buildDeunaGateway(),
+            'datafast' => $this->buildDatafastGateway(),
             default => throw PaymentOperationException::unsupportedGateway($gateway),
         };
     }
@@ -39,6 +42,21 @@ class PaymentFactory
             apiKey: (string) ($config['api_key'] ?? ''),
             webhookSecret: (string) ($config['webhook_secret'] ?? ''),
             timeoutSeconds: (int) ($config['timeout'] ?? 30),
+        );
+    }
+
+    private function buildDatafastGateway(): DatafastGateway
+    {
+        /** @var array<string, mixed> $config */
+        $config = config('payment.datafast', []);
+
+        if (! (bool) ($config['enabled'] ?? false)) {
+            throw DatafastOperationException::disabled();
+        }
+
+        return new DatafastGateway(
+            requestBuilder: new DatafastRequestBuilder($config),
+            resourcePathValidator: new DatafastResourcePathValidator,
         );
     }
 }

@@ -7,6 +7,7 @@ use App\Models\InventoryMovement;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\Payments\PaymentService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
@@ -30,6 +31,10 @@ class OrderCheckoutIntegrationTest extends TestCase
             'customer_name' => 'Cliente Integración',
             'customer_email' => 'integracion@example.com',
             'customer_phone' => '0998887777',
+            'customer_identification' => '0912345678',
+            'billing_province' => 'Guayas',
+            'billing_city' => 'Guayaquil',
+            'billing_address' => 'Calle Principal 456',
             'delivery_method' => Order::DELIVERY_HOME,
             'province' => 'Guayas',
             'city' => 'Guayaquil',
@@ -49,6 +54,36 @@ class OrderCheckoutIntegrationTest extends TestCase
         $this->assertSame('25.50', $order->total);
         $this->assertSame(Order::STATUS_PENDING_PAYMENT, $order->status);
         $this->assertCount(2, $order->items);
+
+        $this->assertSame('0912345678', $order->customer_identification);
+        $this->assertSame('Guayas', $order->billing_province);
+        $this->assertSame('Guayaquil', $order->billing_city);
+        $this->assertSame('Calle Principal 456', $order->billing_address);
+
+        config([
+            'payment.datafast' => [
+                'enabled' => true,
+                'environment' => 'production',
+                'base_url' => 'https://datafast.test',
+                'widget_url' => 'https://widgets.datafast.test',
+                'entity_id' => 'ENTITY123',
+                'authorization' => 'TOKEN123',
+                'mid' => 'MID123',
+                'tid' => 'TID123',
+                'eci' => 'ECI123',
+                'pserv' => 'PSERV123',
+                'risk_name' => 'RISK123',
+                'version' => '2',
+                'currency' => 'USD',
+                'payment_type' => 'DB',
+                'brands' => 'VISA MASTER',
+            ],
+        ]);
+
+        $readiness = app(PaymentService::class)->datafastReadiness($order->fresh(['items']));
+        $this->assertFalse($readiness['ready']);
+        $this->assertSame([], $readiness['missing_configuration']);
+        $this->assertSame('faltan bases imponibles e IVA autorizados para Datafast.', $readiness['message']);
 
         $firstItem = $order->items->firstWhere('product_sku', 'SKU-A');
         $this->assertSame('Producto A', $firstItem->product_name);
@@ -147,6 +182,10 @@ class OrderCheckoutIntegrationTest extends TestCase
             'customer_name' => 'Cliente Invitado',
             'customer_email' => 'invitado@example.com',
             'customer_phone' => '0991234567',
+            'customer_identification' => '0912345678',
+            'billing_province' => 'Guayas',
+            'billing_city' => 'Guayaquil',
+            'billing_address' => 'Calle 1',
             'delivery_method' => Order::DELIVERY_STORE_PICKUP,
         ];
     }

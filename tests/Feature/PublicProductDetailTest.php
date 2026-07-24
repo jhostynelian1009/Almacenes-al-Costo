@@ -24,7 +24,7 @@ class PublicProductDetailTest extends TestCase
         $this->assertSame(['GET', 'HEAD'], $route->methods());
         $this->assertSame(PublicProductController::class.'@show', $route->getActionName());
         $this->assertNotContains('auth', $route->gatherMiddleware());
-        $this->assertCount(57, Route::getRoutes());
+        $this->assertCount(59, Route::getRoutes());
     }
 
     public function test_visible_product_is_accessible_by_slug_without_exposing_internal_data(): void

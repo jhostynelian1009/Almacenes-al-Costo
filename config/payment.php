@@ -7,9 +7,10 @@ return [
     |--------------------------------------------------------------------------
     | 'transfer' => Transferencia bancaria manual (comprobante)
     | 'deuna'    => Pago con QR Deuna
+    | 'datafast' => Datafast Dataweb para tarjetas
     */
     'enabled_methods' => array_filter(
-        explode(',', (string) env('PAYMENT_ENABLED_METHODS', 'transfer,deuna'))
+        explode(',', (string) env('PAYMENT_ENABLED_METHODS', 'transfer,deuna,datafast'))
     ),
 
     /*
@@ -41,6 +42,35 @@ return [
         'webhook_secret' => env('DEUNA_WEBHOOK_SECRET', ''),
         'timeout' => (int) env('DEUNA_TIMEOUT', 30),
         'qr_image_url' => env('DEUNA_QR_IMAGE_URL', ''),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Datafast Dataweb
+    |--------------------------------------------------------------------------
+    | Deshabilitado por defecto. No se deben configurar credenciales reales
+    | hasta contar con activacion Dataweb, credenciales de sandbox y
+    | certificacion Datafast.
+    */
+    'datafast' => [
+        'enabled' => (bool) env('DATAFAST_ENABLED', false),
+        'environment' => env('DATAFAST_ENVIRONMENT', 'sandbox'),
+        'base_url' => env('DATAFAST_BASE_URL', ''),
+        'widget_url' => env('DATAFAST_WIDGET_URL', ''),
+        'entity_id' => env('DATAFAST_ENTITY_ID', ''),
+        'authorization' => env('DATAFAST_AUTHORIZATION', ''),
+        'mid' => env('DATAFAST_MID', ''),
+        'tid' => env('DATAFAST_TID', ''),
+        'eci' => env('DATAFAST_ECI', ''),
+        'pserv' => env('DATAFAST_PSERV', ''),
+        'risk_name' => env('DATAFAST_RISK_NAME', ''),
+        'version' => env('DATAFAST_VERSION', '2'),
+        'currency' => 'USD',
+        'payment_type' => 'DB',
+        'test_mode' => env('DATAFAST_TEST_MODE', 'EXTERNAL'),
+        'brands' => env('DATAFAST_BRANDS', 'VISA MASTER AMEX DISCOVER'),
+        'connect_timeout' => (int) env('DATAFAST_CONNECT_TIMEOUT', 5),
+        'timeout' => (int) env('DATAFAST_TIMEOUT', 15),
     ],
 
     /*

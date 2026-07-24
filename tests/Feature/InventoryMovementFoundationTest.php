@@ -525,7 +525,7 @@ class InventoryMovementFoundationTest extends TestCase
 
     public function test_inventory_movements_add_no_routes_or_future_tables(): void
     {
-        $this->assertCount(57, Route::getRoutes());
+        $this->assertCount(59, Route::getRoutes());
         $this->assertFalse(Route::has('admin.inventory-movements.index'));
         $this->assertFalse(Route::has('admin.inventory-movements.store'));
         $this->assertFalse(Schema::hasTable('stock_movements'));

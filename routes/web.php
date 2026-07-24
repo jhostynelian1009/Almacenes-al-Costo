@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\DatafastPaymentController;
 use App\Http\Controllers\OrderConfirmationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentWebhookController;
@@ -56,6 +57,12 @@ Route::post('/pedido/{orderReference}/pago/procesar', [PaymentController::class,
     ->name('orders.payment.process');
 Route::post('/pedido/{orderReference}/pago/comprobante', [PaymentController::class, 'uploadReceipt'])
     ->name('orders.payment.upload');
+Route::get('/pedido/{orderReference}/pago/datafast/{paymentReference}', [DatafastPaymentController::class, 'widget'])
+    ->where('paymentReference', '[A-Za-z0-9-]{10,80}')
+    ->name('orders.payment.datafast.widget');
+Route::get('/pedido/{orderReference}/pago/datafast/{paymentReference}/resultado', [DatafastPaymentController::class, 'result'])
+    ->where('paymentReference', '[A-Za-z0-9-]{10,80}')
+    ->name('orders.payment.datafast.result');
 Route::get('/pago/retorno/{gateway}', [PaymentController::class, 'callback'])
     ->name('payment.callback');
 

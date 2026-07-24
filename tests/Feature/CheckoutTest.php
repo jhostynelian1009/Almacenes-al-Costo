@@ -44,19 +44,23 @@ class CheckoutTest extends TestCase
         $this->post(route('cart.items.store'), ['product' => $product->slug]);
 
         $this->post(route('checkout.review'), [])
-            ->assertSessionHasErrors(['customer_name', 'customer_email', 'customer_phone', 'delivery_method']);
+            ->assertSessionHasErrors(['customer_name', 'customer_email', 'customer_phone', 'customer_identification', 'billing_province', 'billing_city', 'billing_address', 'delivery_method']);
 
         $this->post(route('checkout.review'), [
             'customer_name' => 'Ana Pérez',
             'customer_email' => 'ana@example.com',
             'customer_phone' => '0987654321',
             'delivery_method' => Order::DELIVERY_HOME,
-        ])->assertSessionHasErrors(['province', 'city', 'address']);
+        ])->assertSessionHasErrors(['customer_identification', 'billing_province', 'billing_city', 'billing_address', 'province', 'city', 'address']);
 
         $this->post(route('checkout.review'), [
             'customer_name' => 'Ana Pérez',
             'customer_email' => 'ana@example.com',
             'customer_phone' => '0987654321',
+            'customer_identification' => '0912345678',
+            'billing_province' => 'Pichincha',
+            'billing_city' => 'Quito',
+            'billing_address' => 'Av. Amazonas 123',
             'delivery_method' => Order::DELIVERY_STORE_PICKUP,
             'subtotal' => '1.00',
             'total' => '1.00',
@@ -74,6 +78,10 @@ class CheckoutTest extends TestCase
             'customer_name' => 'Ana Pérez',
             'customer_email' => 'ana@example.com',
             'customer_phone' => '0987654321',
+            'customer_identification' => '0912345678',
+            'billing_province' => 'Pichincha',
+            'billing_city' => 'Quito',
+            'billing_address' => 'Av. Amazonas 123',
             'delivery_method' => Order::DELIVERY_HOME,
             'province' => 'Pichincha',
             'city' => 'Quito',
@@ -94,6 +102,10 @@ class CheckoutTest extends TestCase
             'customer_name' => 'Luis Gómez',
             'customer_email' => 'luis@example.com',
             'customer_phone' => '0991111111',
+            'customer_identification' => '0912345678',
+            'billing_province' => 'Guayas',
+            'billing_city' => 'Guayaquil',
+            'billing_address' => 'Calle 1',
             'delivery_method' => Order::DELIVERY_STORE_PICKUP,
         ])->assertOk()->assertSee('$ 0.00');
     }

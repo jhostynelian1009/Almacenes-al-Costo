@@ -43,6 +43,8 @@
                             <dd class="col-sm-8">{{ $checkoutData['customer_email'] }}</dd>
                             <dt class="col-sm-4">Teléfono</dt>
                             <dd class="col-sm-8">{{ $checkoutData['customer_phone'] }}</dd>
+                            <dt class="col-sm-4">Identificacion</dt>
+                            <dd class="col-sm-8">{{ $checkoutData['customer_identification'] }}</dd>
                             <dt class="col-sm-4">Entrega</dt>
                             <dd class="col-sm-8">{{ $deliveryLabel }}</dd>
                             @if ($checkoutData['delivery_method'] === 'home_delivery')
@@ -53,6 +55,12 @@
                                 <dt class="col-sm-4">Dirección</dt>
                                 <dd class="col-sm-8">{{ $checkoutData['address'] }}</dd>
                             @endif
+                            <dt class="col-sm-4">Provincia de facturacion</dt>
+                            <dd class="col-sm-8">{{ $checkoutData['billing_province'] }}</dd>
+                            <dt class="col-sm-4">Ciudad de facturacion</dt>
+                            <dd class="col-sm-8">{{ $checkoutData['billing_city'] }}</dd>
+                            <dt class="col-sm-4">Direccion de facturacion</dt>
+                            <dd class="col-sm-8">{{ $checkoutData['billing_address'] }}</dd>
                             @if (! empty($checkoutData['delivery_reference']))
                                 <dt class="col-sm-4">Referencia</dt>
                                 <dd class="col-sm-8">{{ $checkoutData['delivery_reference'] }}</dd>

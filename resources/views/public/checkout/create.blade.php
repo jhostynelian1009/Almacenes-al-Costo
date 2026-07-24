@@ -34,6 +34,12 @@
                             @error('customer_phone')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
+                        <div class="mb-4">
+                            <label class="form-label" for="customer_identification">Documento de identidad</label>
+                            <input class="form-control @error('customer_identification') is-invalid @enderror" id="customer_identification" name="customer_identification" type="text" value="{{ old('customer_identification') }}" required>
+                            @error('customer_identification')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
                         <h2 class="h5 mb-3">Entrega</h2>
                         <fieldset class="mb-3">
                             <legend class="form-label">Método de entrega</legend>
@@ -63,6 +69,23 @@
                             <input class="form-control @error('address') is-invalid @enderror" id="address" name="address" type="text" value="{{ old('address') }}">
                             @error('address')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
+                        <h2 class="h5 mb-3">Facturacion</h2>
+                        <div class="mb-3">
+                            <label class="form-label" for="billing_province">Provincia de facturacion</label>
+                            <input class="form-control @error('billing_province') is-invalid @enderror" id="billing_province" name="billing_province" type="text" value="{{ old('billing_province') }}" required>
+                            @error('billing_province')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="billing_city">Ciudad de facturacion</label>
+                            <input class="form-control @error('billing_city') is-invalid @enderror" id="billing_city" name="billing_city" type="text" value="{{ old('billing_city') }}" required>
+                            @error('billing_city')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="billing_address">Direccion de facturacion</label>
+                            <input class="form-control @error('billing_address') is-invalid @enderror" id="billing_address" name="billing_address" type="text" value="{{ old('billing_address') }}" required>
+                            @error('billing_address')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
                         <div class="mb-3">
                             <label class="form-label" for="delivery_reference">Referencia de ubicación (opcional)</label>
                             <input class="form-control @error('delivery_reference') is-invalid @enderror" id="delivery_reference" name="delivery_reference" type="text" value="{{ old('delivery_reference') }}">

@@ -43,21 +43,23 @@ class PaymentController extends Controller
 
         $bankConfig = config('payment.bank', []);
         $enabledMethods = config('payment.enabled_methods', ['transfer']);
+        $datafastReadiness = $this->paymentService->datafastReadiness($order);
 
         return view('public.orders.payment', [
             'order' => $order,
             'bankConfig' => $bankConfig,
             'enabledMethods' => $enabledMethods,
+            'datafastReadiness' => $datafastReadiness,
         ]);
     }
 
     /**
-     * Initialize a payment for a given method (transfer or deuna).
+     * Initialize a payment for a given method.
      */
     public function process(Request $request, string $orderReference): RedirectResponse
     {
         $validated = $request->validate([
-            'payment_method' => ['required', 'string', 'in:transfer,deuna'],
+            'payment_method' => ['required', 'string', 'in:transfer,deuna,datafast'],
         ]);
 
         $order = Order::query()
@@ -69,10 +71,15 @@ class PaymentController extends Controller
         }
 
         $method = $validated['payment_method'];
-        $gateway = $method === 'deuna' ? 'deuna' : 'manual';
+        $gateway = match ($method) {
+            'deuna' => 'deuna',
+            'datafast' => 'datafast',
+            default => 'manual',
+        };
+        $paymentMethod = $method === 'datafast' ? Payment::METHOD_CARD : $method;
 
         try {
-            $this->paymentService->initialize($order, $gateway, $method);
+            $response = $this->paymentService->initialize($order, $gateway, $paymentMethod);
         } catch (PaymentOperationException $e) {
             Log::info('Payment initialization rejected', [
                 'order_reference' => $orderReference,
@@ -80,6 +87,13 @@ class PaymentController extends Controller
             ]);
 
             return back()->with('error', $e->getMessage());
+        }
+
+        if ($method === 'datafast' && $response->transactionId !== null) {
+            return redirect()->route('orders.payment.datafast.widget', [
+                'orderReference' => $orderReference,
+                'paymentReference' => $response->transactionId,
+            ]);
         }
 
         return redirect()->route('orders.payment.show', ['orderReference' => $orderReference]);

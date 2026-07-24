@@ -7,14 +7,17 @@ use App\Events\OrderApproved;
 use App\Events\PaymentCompleted;
 use App\Events\PaymentFailed;
 use App\Events\PaymentInitiated;
+use App\Exceptions\DatafastOperationException;
 use App\Exceptions\PaymentOperationException;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\PaymentTransaction;
 use App\Models\WebhookLog;
+use App\Payments\DatafastGateway;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class PaymentService
 {
@@ -39,6 +42,10 @@ class PaymentService
     ): PaymentResponse {
         if (! $order->isPayable()) {
             throw PaymentOperationException::orderNotPayable();
+        }
+
+        if ($gateway === Payment::GATEWAY_DATAFAST || $paymentMethod === Payment::METHOD_CARD) {
+            return $this->initializeDatafast($order, $options);
         }
 
         $adapter = $this->factory->make($gateway);
@@ -104,6 +111,211 @@ class PaymentService
 
             return $response;
         });
+    }
+
+    /**
+     * @return array{enabled: bool, ready: bool, message: string, missing_configuration: list<string>}
+     */
+    public function datafastReadiness(Order $order): array
+    {
+        /** @var array<string, mixed> $config */
+        $config = config('payment.datafast', []);
+
+        return (new DatafastRequestBuilder($config))->readiness($order);
+    }
+
+    /**
+     * @return array{checkoutId: string, widgetScriptUrl: string, brands: string, orderReference: string, paymentReference: string}
+     */
+    public function datafastWidgetData(Order $order, string $paymentReference): array
+    {
+        $gateway = $this->datafastGateway();
+        $payment = $this->findDatafastPayment($order, $paymentReference);
+        $checkoutId = $this->datafastStoredCheckoutId($payment);
+
+        if ($checkoutId === null) {
+            throw DatafastOperationException::verificationFailed();
+        }
+
+        return [
+            'checkoutId' => $checkoutId,
+            'widgetScriptUrl' => $gateway->widgetScriptUrl($checkoutId),
+            'brands' => $gateway->brands(),
+            'orderReference' => $order->reference,
+            'paymentReference' => $paymentReference,
+        ];
+    }
+
+    public function handleDatafastResult(
+        Order $order,
+        string $paymentReference,
+        string $resourcePath,
+    ): PaymentResponse {
+        $gateway = $this->datafastGateway();
+        $payment = $this->findDatafastPayment($order, $paymentReference);
+
+        if ($payment->isTerminal()) {
+            return new PaymentResponse(
+                status: $payment->status,
+                transactionId: $payment->transaction_id,
+                message: $payment->isCompleted()
+                    ? 'Este pago con tarjeta ya fue confirmado.'
+                    : 'Este pago con tarjeta ya fue cerrado.',
+                payload: [
+                    'gateway' => 'datafast',
+                    'result_code' => $payment->gateway_response_code,
+                    'idempotent_reuse' => true,
+                ],
+            );
+        }
+
+        try {
+            $result = $gateway->verifyPaymentResult($payment, $resourcePath);
+        } catch (DatafastOperationException $exception) {
+            $this->recordTransaction($payment, PaymentTransaction::EVENT_ERROR, [
+                'gateway' => 'datafast',
+                'payment_reference' => $paymentReference,
+                'failure_category' => 'result_verification',
+            ]);
+
+            throw $exception;
+        }
+
+        $response = match ($result->status) {
+            'completed' => PaymentResponse::completed(
+                transactionId: $result->merchantTransactionId,
+                message: 'Pago con tarjeta confirmado.',
+                payload: $result->payload,
+            ),
+            'failed' => PaymentResponse::failed(
+                message: 'Pago con tarjeta rechazado por Datafast.',
+                payload: $result->payload,
+            ),
+            default => PaymentResponse::pending(
+                transactionId: $result->merchantTransactionId,
+                message: 'Tu pago con tarjeta esta siendo verificado.',
+                payload: $result->payload,
+            ),
+        };
+
+        $this->recordTransaction($payment, PaymentTransaction::EVENT_CALLBACK, [
+            'gateway' => 'datafast',
+            'payment_reference' => $paymentReference,
+            'resource_path_hash' => hash('sha256', $resourcePath),
+            'response_status' => $response->status,
+            'provider_result_code' => $result->resultCode,
+        ]);
+
+        $this->applyDatafastResult($payment, $response);
+
+        return $response;
+    }
+
+    /**
+     * @param  array<string, mixed>  $options
+     */
+    private function initializeDatafast(Order $order, array $options = []): PaymentResponse
+    {
+        $adapter = $this->datafastGateway();
+        $readiness = $adapter->readiness($order);
+
+        if (! $readiness['ready']) {
+            if ($readiness['missing_configuration'] !== []) {
+                Log::warning('Datafast initialization blocked by configuration', [
+                    'gateway' => 'datafast',
+                    'order_reference' => $order->reference,
+                    'missing_configuration' => $readiness['missing_configuration'],
+                ]);
+
+                throw DatafastOperationException::configurationIncomplete($readiness['missing_configuration']);
+            }
+
+            throw DatafastOperationException::orderNotReady($readiness['message']);
+        }
+
+        $payment = DB::transaction(function () use ($order): Payment {
+            $payment = Payment::query()
+                ->where('order_id', $order->id)
+                ->where('gateway', Payment::GATEWAY_DATAFAST)
+                ->where('payment_method', Payment::METHOD_CARD)
+                ->where('status', Payment::STATUS_PENDING)
+                ->first();
+
+            $isNew = $payment === null;
+
+            if ($isNew) {
+                $payment = Payment::query()->create([
+                    'order_id' => $order->id,
+                    'gateway' => Payment::GATEWAY_DATAFAST,
+                    'payment_method' => Payment::METHOD_CARD,
+                    'amount' => $order->total,
+                    'currency' => 'USD',
+                    'status' => Payment::STATUS_PENDING,
+                    'transaction_id' => $this->newDatafastPaymentReference(),
+                ]);
+            } elseif ($payment->transaction_id === null || $payment->transaction_id === '') {
+                $payment->update(['transaction_id' => $this->newDatafastPaymentReference()]);
+            }
+
+            if ($isNew) {
+                event(new PaymentInitiated($order, $payment));
+            }
+
+            return $payment->refresh();
+        });
+
+        $existingCheckoutId = $this->datafastStoredCheckoutId($payment);
+
+        $this->recordTransaction($payment, PaymentTransaction::EVENT_REQUEST, [
+            'gateway' => 'datafast',
+            'method' => Payment::METHOD_CARD,
+            'order_reference' => $order->reference,
+            'payment_reference' => $payment->transaction_id,
+            'amount' => (string) $order->total,
+            'currency' => 'USD',
+            'has_existing_checkout' => $existingCheckoutId !== null,
+        ]);
+
+        try {
+            $response = $adapter->initializePayment($order->loadMissing('items'), array_merge($options, [
+                'payment_reference' => $payment->transaction_id,
+                'existing_checkout_id' => $existingCheckoutId,
+                'shopper_result_url' => route('orders.payment.datafast.result', [
+                    'orderReference' => $order->reference,
+                    'paymentReference' => $payment->transaction_id,
+                ]),
+            ]));
+        } catch (PaymentOperationException $exception) {
+            $this->recordTransaction($payment, PaymentTransaction::EVENT_ERROR, [
+                'gateway' => 'datafast',
+                'payment_reference' => $payment->transaction_id,
+                'failure_category' => 'checkout_initialization',
+            ]);
+
+            throw $exception;
+        }
+
+        $this->recordTransaction($payment, PaymentTransaction::EVENT_RESPONSE, [
+            'gateway' => 'datafast',
+            'status' => $response->status,
+            'payment_reference' => $payment->transaction_id,
+            'checkout_id' => $response->payload['checkout_id'] ?? null,
+            'provider_result_code' => $response->payload['result_code'] ?? null,
+            'has_redirect' => false,
+        ]);
+
+        if (isset($response->payload['result_code']) && is_string($response->payload['result_code'])) {
+            $payment->update(['gateway_response_code' => $response->payload['result_code']]);
+        }
+
+        Log::info('Datafast payment initialized', [
+            'gateway' => 'datafast',
+            'order_reference' => $order->reference,
+            'payment_reference' => $payment->transaction_id,
+            'has_existing_checkout' => $existingCheckoutId !== null,
+        ]);
+
+        return $response;
     }
 
     /**
@@ -220,7 +432,33 @@ class PaymentService
      */
     private function applyWebhookResult(Payment $payment, PaymentResponse $response, string $eventId): void
     {
+        $this->applyGatewayResult($payment, $response);
+    }
+
+    private function applyDatafastResult(Payment $payment, PaymentResponse $response): void
+    {
         DB::transaction(function () use ($payment, $response): void {
+            $payment->refresh();
+
+            if ($payment->isTerminal()) {
+                return;
+            }
+
+            if (isset($response->payload['result_code']) && is_string($response->payload['result_code'])) {
+                $payment->update(['gateway_response_code' => $response->payload['result_code']]);
+            }
+        });
+
+        $this->applyGatewayResult($payment, $response);
+    }
+
+    /**
+     * Apply provider result to payment and order states transactionally.
+     */
+    private function applyGatewayResult(Payment $payment, PaymentResponse $response): void
+    {
+        DB::transaction(function () use ($payment, $response): void {
+            $payment->refresh();
             $order = $payment->order;
 
             if ($response->status === 'completed') {
@@ -314,6 +552,63 @@ class PaymentService
         ]);
     }
 
+    private function datafastGateway(): DatafastGateway
+    {
+        $adapter = $this->factory->make(Payment::GATEWAY_DATAFAST);
+
+        if (! $adapter instanceof DatafastGateway) {
+            throw PaymentOperationException::unsupportedGateway(Payment::GATEWAY_DATAFAST);
+        }
+
+        return $adapter;
+    }
+
+    private function findDatafastPayment(Order $order, string $paymentReference): Payment
+    {
+        $payment = Payment::query()
+            ->where('order_id', $order->id)
+            ->where('gateway', Payment::GATEWAY_DATAFAST)
+            ->where('payment_method', Payment::METHOD_CARD)
+            ->where('transaction_id', $paymentReference)
+            ->first();
+
+        if ($payment === null) {
+            throw DatafastOperationException::verificationFailed();
+        }
+
+        return $payment;
+    }
+
+    private function datafastStoredCheckoutId(Payment $payment): ?string
+    {
+        $transactions = $payment->transactions()
+            ->latest('id')
+            ->get();
+
+        $validator = new DatafastResourcePathValidator;
+
+        foreach ($transactions as $transaction) {
+            $payload = $transaction->payload;
+
+            if (! is_array($payload)) {
+                continue;
+            }
+
+            $checkoutId = $payload['checkout_id'] ?? $payload['payload_summary']['checkout_id'] ?? null;
+
+            if (is_string($checkoutId) && $validator->isValidCheckoutId($checkoutId)) {
+                return $checkoutId;
+            }
+        }
+
+        return null;
+    }
+
+    private function newDatafastPaymentReference(): string
+    {
+        return 'DF'.Str::upper((string) Str::ulid());
+    }
+
     /**
      * Record a payment lifecycle event in payment_transactions.
      *
@@ -335,7 +630,25 @@ class PaymentService
      */
     private function sanitizedPayload(array $payload): array
     {
-        $sensitiveKeys = ['api_key', 'secret', 'password', 'token', 'authorization', 'webhook_secret'];
+        $sensitiveKeys = [
+            'api_key',
+            'secret',
+            'password',
+            'token',
+            'authorization',
+            'webhook_secret',
+            'entity_id',
+            'entityId',
+            'mid',
+            'tid',
+            'eci',
+            'pserv',
+            'customer_identification',
+            'identificationDocId',
+            'card_number',
+            'cvv',
+            'expiration',
+        ];
         foreach ($sensitiveKeys as $key) {
             if (isset($payload[$key])) {
                 $payload[$key] = '[REDACTED]';

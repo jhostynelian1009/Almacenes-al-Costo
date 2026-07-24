@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'Pago del pedido | Almacenes al Costo')
-@section('description', 'Completa el pago de tu pedido mediante transferencia bancaria o Deuna.')
+@section('description', 'Completa el pago de tu pedido mediante transferencia bancaria, Deuna o tarjeta.')
 
 @section('content')
     <section class="public-section-placeholder py-5" aria-labelledby="payment-title">
@@ -27,6 +27,11 @@
             @if (session('error'))
                 <div class="alert alert-danger mb-4">{{ session('error') }}</div>
             @endif
+
+            @php
+                $datafastConfigured = in_array('datafast', $enabledMethods, true) && ($datafastReadiness['enabled'] ?? false);
+                $datafastReady = $datafastConfigured && ($datafastReadiness['ready'] ?? false);
+            @endphp
 
             <div class="row g-4">
                 {{-- Método: Transferencia Bancaria --}}
@@ -167,6 +172,43 @@
                                     Enviar comprobante Deuna
                                 </button>
                             </form>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Metodo: Datafast Dataweb --}}
+                @if ($datafastReady)
+                    <div class="col-lg-6">
+                        <div class="section-placeholder-card p-4 h-100">
+                            <h2 class="h5 mb-3">Tarjeta de debito o credito</h2>
+                            <p class="text-body-secondary mb-3">
+                                Paga con tarjeta mediante el formulario seguro de Datafast Dataweb.
+                            </p>
+                            <p class="small text-body-secondary">
+                                Los datos de tu tarjeta seran procesados de forma segura por Datafast.
+                                Almacenes al Costo no almacena el numero, fecha de vencimiento ni CVV de tu tarjeta.
+                            </p>
+
+                            <form
+                                method="POST"
+                                action="{{ route('orders.payment.process', ['orderReference' => $order->reference]) }}"
+                            >
+                                @csrf
+                                <input type="hidden" name="payment_method" value="datafast">
+
+                                <button type="submit" class="btn btn-brand w-100">
+                                    Pagar con tarjeta
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @elseif ($datafastConfigured)
+                    <div class="col-lg-6">
+                        <div class="section-placeholder-card p-4 h-100">
+                            <h2 class="h5 mb-3">Tarjeta de debito o credito</h2>
+                            <div class="alert alert-info mb-0">
+                                {{ $datafastReadiness['message'] ?? 'Pago con tarjeta no disponible para este pedido.' }}
+                            </div>
                         </div>
                     </div>
                 @endif

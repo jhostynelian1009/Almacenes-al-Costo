@@ -25,6 +25,8 @@ class Payment extends Model
 
     public const GATEWAY_DEUNA = 'deuna';
 
+    public const GATEWAY_DATAFAST = 'datafast';
+
     public const METHOD_TRANSFER = 'transfer';
 
     public const METHOD_DEUNA = 'deuna';

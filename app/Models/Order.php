@@ -30,14 +30,21 @@ class Order extends Model
         'customer_name',
         'customer_email',
         'customer_phone',
+        'customer_identification',
         'delivery_method',
         'province',
         'city',
         'address',
+        'billing_province',
+        'billing_city',
+        'billing_address',
         'delivery_reference',
         'notes',
         'subtotal',
         'shipping_cost',
+        'tax_base_zero',
+        'tax_base_taxable',
+        'tax_amount',
         'total',
         'status',
     ];
@@ -50,6 +57,9 @@ class Order extends Model
         return [
             'subtotal' => 'decimal:2',
             'shipping_cost' => 'decimal:2',
+            'tax_base_zero' => 'decimal:2',
+            'tax_base_taxable' => 'decimal:2',
+            'tax_amount' => 'decimal:2',
             'total' => 'decimal:2',
         ];
     }

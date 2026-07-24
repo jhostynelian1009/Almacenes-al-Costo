@@ -131,11 +131,6 @@ class OrderCheckoutIntegrationTest extends TestCase
     public function test_no_payment_or_admin_order_routes_are_registered(): void
     {
         foreach ([
-            'order.payment',
-            'order.payment.process',
-            'order.payment.upload',
-            'payment.callback',
-            'payment.webhook',
             'admin.orders.index',
             'checkout.index',
         ] as $routeName) {

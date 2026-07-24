@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\InventoryAlertController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\InventoryMinimumStockController;
 use App\Http\Controllers\Admin\InventoryMovementController;
+use App\Http\Controllers\Admin\PaymentReceiptController;
+use App\Http\Controllers\Admin\PaymentReviewController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -12,6 +14,8 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderConfirmationController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaymentWebhookController;
 use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\PublicProductController;
@@ -44,6 +48,20 @@ Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.s
 
 Route::get('/pedido/{orderReference}/confirmacion', [OrderConfirmationController::class, 'show'])
     ->name('orders.confirmation');
+
+// EP-005: Payment routes
+Route::get('/pedido/{orderReference}/pago', [PaymentController::class, 'show'])
+    ->name('orders.payment.show');
+Route::post('/pedido/{orderReference}/pago/procesar', [PaymentController::class, 'process'])
+    ->name('orders.payment.process');
+Route::post('/pedido/{orderReference}/pago/comprobante', [PaymentController::class, 'uploadReceipt'])
+    ->name('orders.payment.upload');
+Route::get('/pago/retorno/{gateway}', [PaymentController::class, 'callback'])
+    ->name('payment.callback');
+
+// EP-005: Webhook endpoint — excluded from CSRF (see bootstrap/app.php or VerifyCsrfToken)
+Route::post('/api/payment/webhook/{gateway}', [PaymentWebhookController::class, 'handleWebhook'])
+    ->name('payment.webhook')->withoutMiddleware(['web']);
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -84,4 +102,14 @@ Route::middleware(['auth', 'active', 'admin'])
         Route::patch('categories/{category}/status', [CategoryController::class, 'updateStatus'])
             ->name('categories.status');
         Route::resource('categories', CategoryController::class);
+
+        // EP-005: Payment review
+        Route::get('payments', [PaymentReviewController::class, 'index'])
+            ->name('payments.index');
+        Route::get('payments/{id}', [PaymentReviewController::class, 'show'])
+            ->name('payments.show');
+        Route::post('payments/{id}/review', [PaymentReviewController::class, 'review'])
+            ->name('payments.review');
+        Route::get('payments/{id}/receipt', [PaymentReceiptController::class, 'download'])
+            ->name('payments.receipt.download');
     });

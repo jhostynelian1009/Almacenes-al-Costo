@@ -79,7 +79,7 @@ class PublicSiteCompletionTest extends TestCase
         $this->assertTrue(Route::has('catalog.show'));
         $this->assertTrue(Route::has('cart.index'));
         $this->assertTrue(Route::has('checkout.create'));
-        $this->assertCount(48, Route::getRoutes());
+        $this->assertCount(57, Route::getRoutes());
     }
 
     private function createPublicProduct(

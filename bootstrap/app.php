@@ -13,11 +13,20 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Habilita la confianza en los proxies para que Ngrok funcione correctamente
+        $middleware->trustProxies(at: '*');
+
         $middleware->redirectGuestsTo('/login');
         $middleware->redirectUsersTo('/admin');
         $middleware->alias([
             'active' => EnsureUserIsActive::class,
             'admin' => EnsureUserIsAdmin::class,
+        ]);
+
+        // EP-005: Exclude payment webhook from CSRF verification
+        // Security is provided by HMAC signature validation in PaymentService
+        $middleware->validateCsrfTokens(except: [
+            'api/payment/webhook/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

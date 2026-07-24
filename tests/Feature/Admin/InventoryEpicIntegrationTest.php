@@ -339,13 +339,17 @@ class InventoryEpicIntegrationTest extends TestCase
             ['GET', route('admin.inventory.show', $inventory), []],
             ['GET', route('admin.inventory.movements.create', $inventory), []],
             ['PATCH', route('admin.inventory.minimum-stock.update', $inventory), ['min_stock' => 1]],
-            ['POST', route('admin.inventory.movements.store', $inventory), [
-                'type' => InventoryMovement::TYPE_ENTRY,
-                'quantity' => 1,
-                'new_stock' => null,
-                'reason' => 'Operación autorizada',
-                'idempotency_key' => 'ep008-authorized-entry',
-            ]],
+            [
+                'POST',
+                route('admin.inventory.movements.store', $inventory),
+                [
+                    'type' => InventoryMovement::TYPE_ENTRY,
+                    'quantity' => 1,
+                    'new_stock' => null,
+                    'reason' => 'Operación autorizada',
+                    'idempotency_key' => 'ep008-authorized-entry',
+                ],
+            ],
         ];
 
         foreach ($requests as [$method, $url, $parameters]) {
@@ -393,7 +397,7 @@ class InventoryEpicIntegrationTest extends TestCase
         sort($expectedRoutes);
 
         $this->assertSame($expectedRoutes, $actualRoutes);
-        $this->assertCount(48, Route::getRoutes());
+        $this->assertCount(57, Route::getRoutes());
 
         foreach ($expectedRoutes as $name) {
             $route = Route::getRoutes()->getByName($name);
@@ -597,7 +601,7 @@ class InventoryEpicIntegrationTest extends TestCase
 
         $this->assertFalse(Schema::hasTable('alerts'));
         $this->assertFalse(Schema::hasColumn('inventories', 'stock_status'));
-        $this->assertCount(48, Route::getRoutes());
+        $this->assertCount(57, Route::getRoutes());
     }
 
     /**
